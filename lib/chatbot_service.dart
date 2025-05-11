@@ -5,6 +5,29 @@ class ChatbotService {
   static const String supabaseUrl = 'https://amfomxmqoeyfuwkqlzyk.supabase.co';
   static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZm9teG1xb2V5ZnV3a3FsenlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwMDgyMDEsImV4cCI6MjA2MTU4NDIwMX0.erme360AeqVMShEVDXJadwZ0wJQP7Wb3-X_QRlsRsRk';
 
+  // Map of casual phrases to responses
+  Map<String, String> _casualResponses = {
+    r'^(hi|hello|hey)$': 'Hey there! How can I assist you today?',
+    r'^(good morning|morning)$': 'Good morning! Ready to tackle your immigration questions?',
+    r'^(good afternoon|afternoon)$': 'Good afternoon! What’s on your mind?',
+    r'^(good evening|evening)$': 'Good evening! How can I help you tonight?',
+    r'^(thanks|thank you|ty)$': 'You’re very welcome!',
+    r'^(bye|goodbye|see you)$': 'Catch you later! Have a great day!',
+    r'^(ok|okay)$': 'Alright, what’s next?',
+    r'^(how are you|you okay)$': 'I’m doing great, thanks for asking! How about you?',
+  };
+
+  // Check if query matches a casual phrase and return response
+  String? handleCasualQuery(String query) {
+    query = query.toLowerCase().trim();
+    for (var pattern in _casualResponses.keys) {
+      if (RegExp(pattern, caseSensitive: false).hasMatch(query)) {
+        return _casualResponses[pattern];
+      }
+    }
+    return null;
+  }
+
   // Normalize query for better matching
   String preprocessQuery(String query) {
     query = query.toLowerCase().trim();

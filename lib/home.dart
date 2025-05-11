@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ? const Icon(Icons.person, color: whiteColor)
                   : ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: 'https://via.placeholder.com/150', // Replace with user profile URL
+                        imageUrl: 'https://cdn-icons-png.flaticon.com/512/64/64572.png', // Replace with user profile URL
                         width: 36,
                         height: 36,
                         fit: BoxFit.cover,
@@ -172,7 +172,7 @@ class ProfileDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
     final userName = user?.userMetadata?['name'] ?? 'Guest';
-    final profileImageUrl = user?.userMetadata?['avatar_url'] ?? 'https://via.placeholder.com/150';
+    final profileImageUrl = user?.userMetadata?['avatar_url'] ?? 'https://cdn-icons-png.flaticon.com/512/64/64572.png';
 
     return Drawer(
       child: Column(

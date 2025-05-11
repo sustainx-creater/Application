@@ -41,16 +41,26 @@ class _ChatbotPageContentState extends State<ChatbotPageContent> {
 
     try {
       final service = ChatbotService();
-      // Generate embedding
-      final embedding = await service.generateEmbedding(query);
-      // Get matching Q&A
-      final result = await service.matchQA(embedding);
-      setState(() {
-        _messages.add({
-          'sender': 'bot',
-          'text': 'Here’s what I found: ${result['answer']}',
+      // Check for casual query first
+      final casualResponse = service.handleCasualQuery(query);
+      if (casualResponse != null) {
+        setState(() {
+          _messages.add({
+            'sender': 'bot',
+            'text': casualResponse,
+          });
         });
-      });
+      } else {
+        // Proceed with embedding-based Q&A for non-casual queries
+        final embedding = await service.generateEmbedding(query);
+        final result = await service.matchQA(embedding);
+        setState(() {
+          _messages.add({
+            'sender': 'bot',
+            'text': 'Here’s what I found: ${result['answer']}',
+          });
+        });
+      }
     } catch (e) {
       const errorMessage = 'Sorry, I don’t have an answer for this question. '
           'Please rephrase or contact teamsustainx+queries@gmail.com. '
