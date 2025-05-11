@@ -15,13 +15,11 @@ class AboutUsPageContent extends StatelessWidget {
       if (await canLaunchUrl(emailLaunchUri)) {
         await launchUrl(emailLaunchUri);
       } else {
-        print('Could not launch $emailLaunchUri');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not open email app.')),
         );
       }
     } catch (e) {
-      print('Error launching URL: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error contacting us.')),
       );
@@ -31,112 +29,254 @@ class AboutUsPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final teamMembers = [
-      'Aditya Pandey',
-      'Georgii Korenkov',
-      'Lohit Uchil',
-      'Shivansh Bhatnagar',
-      'Vrinda Sharma',
+      {
+        'name': 'Aditya Pandey',
+        'role': 'Developer',
+        'image': 'lib/assets/images/aditya.jpg',
+        'linkedin': 'https://linkedin.com/in/aditya-pa',
+      },
+      {
+        'name': 'Georgii Korenkov',
+        'role': 'Developer',
+        'image': 'lib/assets/images/georgii.jpg',
+        'linkedin': 'https://www.linkedin.com/in/georgii-korenkov/',
+      },
+      {
+        'name': 'Lohit Uchil',
+        'role': 'Developer',
+        'image': 'lib/assets/images/lohit.jpg',
+        'linkedin': 'https://www.linkedin.com/in/lohit-uchil/',
+      },
+      {
+        'name': 'Shivansh Bhatnagar',
+        'role': 'Developer',
+        'image': 'lib/assets/images/male.jpg',
+        'linkedin': 'https://linkedin.com/in/shivanshbhatnagar',
+      },
+      {
+        'name': 'Vrinda Sharma',
+        'role': 'Developer',
+        'image': 'lib/assets/images/female.jpg',
+        'linkedin': 'https://linkedin.com/in/vrindasharma',
+      },
     ];
 
     return CustomScrollView(
       slivers: [
+        // Hero Section
         SliverToBoxAdapter(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 40.0,
-              horizontal: 20.0,
-            ),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [emeraldGreen, darkGreen],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          child: Stack(
+            children: [
+              Container(
+                height: 300,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage('https://images.unsplash.com/photo-1516321310768-61f0f2b7c0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'),
+                    fit: BoxFit.cover,
+                    opacity: 0.7,
+                  ),
+                ),
               ),
-            ),
-            child: Text(
-              'About EZMove',
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall
-                  ?.copyWith(color: whiteColor),
-              textAlign: TextAlign.center,
+              Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [emeraldGreen.withOpacity(0.8), darkGreen.withOpacity(0.8)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Center(
+                  child: AnimatedOpacity(
+                    opacity: 1.0,
+                    duration: const Duration(seconds: 2),
+                    child: Text(
+                      'About EZMove',
+                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                            color: whiteColor,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10.0,
+                                color: Colors.black.withOpacity(0.5),
+                                offset: const Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Mission Section
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              transform: Matrix4.translationValues(0, 0, 0),
+              decoration: BoxDecoration(
+                color: whiteColor,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Our Mission',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: darkGreen,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'EZMove is a student-led initiative dedicated to simplifying the transition for students, tourists, and newcomers in a new country. '
+                    'We provide a seamless platform offering guidance on housing, local services, safety, and community engagement, ensuring a stress-free experience.',
+                    textAlign: TextAlign.justify,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.black87,
+                          height: 1.5,
+                        ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
+        // Team Section
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
-                Text(
-                  'Our Mission',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'EZMove is a student-led initiative aimed at supporting students, tourists, and newcomers settling in a new country. '
-                  'Our goal is to make transitions smoother by providing guidance on housing, local services, safety, and community engagement — all in one accessible platform.',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.black87, height: 1.5),
-                ),
-                const SizedBox(height: 30),
                 Text(
                   'Meet Our Team',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: darkGreen,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                const SizedBox(height: 15),
-                ListView.separated(
+                const SizedBox(height: 20),
+                GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 0.75,
+                  ),
                   itemCount: teamMembers.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     final member = teamMembers[index];
-                    return Card(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: mintGreen,
-                          child: Text(
-                            member.isNotEmpty ? member[0] : '?',
-                            style: const TextStyle(
-                              color: darkGreen,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                    return AnimatedScale(
+                      scale: 1.0,
+                      duration: const Duration(milliseconds: 300),
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        title: Text(
-                          member,
-                          style: Theme.of(context).textTheme.titleMedium,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                              child: Image.asset(
+                                member['image']!,
+                                height: 120,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    member['name']!,
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: darkGreen,
+                                        ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    member['role']!,
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: Colors.grey[600],
+                                        ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  IconButton(
+                                    icon: const Icon(Icons.link, color: emeraldGreen),
+                                    onPressed: () async {
+                                      final url = Uri.parse(member['linkedin']!);
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
                   },
                 ),
-                const SizedBox(height: 30),
-                Center(
+              ],
+            ),
+          ),
+        ),
+        // Contact Section
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                AnimatedOpacity(
+                  opacity: 1.0,
+                  duration: const Duration(seconds: 1),
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.email_outlined, size: 18),
                     label: const Text('Contact Us'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: emeraldGreen,
+                      foregroundColor: whiteColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     onPressed: () => _contactUs(context),
                   ),
                 ),
                 const SizedBox(height: 15),
-                const Center(
-                  child: Text(
-                    'teamsustainx@gmail.com\nhttps://sustainax.netlify.app/',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      height: 1.4,
-                    ),
-                  ),
+                Text(
+                  'teamsustainx@gmail.com\nhttps://sustainax.netlify.app/',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey,
+                        height: 1.4,
+                      ),
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           ),
