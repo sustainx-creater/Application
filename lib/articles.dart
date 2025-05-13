@@ -1,90 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'theme.dart';
 
 class ArticlesPageContent extends StatefulWidget {
-  const ArticlesPageContent({super.key});
+  final int? initialArticleIndex;
+  const ArticlesPageContent({super.key, this.initialArticleIndex});
+
+  static Future<List<Map<String, dynamic>>> loadArticlesFromJson() async {
+    final jsonString = await rootBundle.loadString('lib/assets/files/articles.json');
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.cast<Map<String, dynamic>>();
+  }
+
+  static Future<List<Map<String, dynamic>>> articlesForHome() async {
+    return await loadArticlesFromJson();
+  }
 
   @override
   State<ArticlesPageContent> createState() => _ArticlesPageContentState();
 }
 
 class _ArticlesPageContentState extends State<ArticlesPageContent> {
-  final List<Map<String, dynamic>> _articles = [
-    {
-    "title": "Navigating Work Opportunities in Ireland for International Professionals",
-    "author": "Aditya Pandey",
-    "date": "March 20, 2025",
-    "image": "lib/assets/images/aditya.jpg",
-    "summary": "A comprehensive guide for international professionals seeking employment in Ireland, highlighting visa requirements, in-demand sectors, and recent policy changes.",
-    "content": "### 🛂 Visa and Work Permits\n\n- **Critical Skills Employment Permit:** As of January 2025, the minimum salary requirement has increased to €44,000. This permit is designed for highly skilled workers in sectors facing labor shortages.\n- **General Employment Permit:** Suitable for a broader range of occupations, with varying salary thresholds depending on the role.\n\nFor detailed information, refer to the [Department of Enterprise](https://enterprise.gov.ie/en/news-and-events/department-news/2023/december/20122023.html).\n\n### 💼 In-Demand Sectors\n\nIreland's thriving economy offers opportunities in various sectors:\n\n- **Healthcare:** Continuous demand for medical professionals.\n- **Information Technology:** Roles in software development, cybersecurity, and data analysis are abundant.\n- **Construction:** Ongoing infrastructure projects require skilled labor.\n\nExplore current job openings on [Jobs.ie](https://www.jobs.ie/) and [IrishJobs.ie](https://www.irishjobs.ie/).\n\n### 🏡 Accommodation Tips\n\n- **Start Early:** The rental market is competitive. Begin your search well in advance.\n- **Use Trusted Platforms:** Websites like [Daft.ie](https://www.daft.ie/) and [Rent.ie](https://www.rent.ie/) list available properties.\n- **Beware of Scams:** Always verify listings and avoid sending money before viewing a property.\n\nFor more insights, check out this [Reddit AMA](https://www.reddit.com/r/Indians_StudyAbroad/comments/1izde9b/ama_masters_and_job_market_in_ireland_2025/)."
-    },
-    {
-      "title": "Public Transport in Ireland: A Student’s Guide",
-      "author": "Aditya Pandey",
-      "date": "May 13, 2025",
-      "image": "lib/assets/images/aditya.jpg",
-      "summary": "A practical guide on navigating Ireland’s public transport system as a student, including discounts, apps, and travel tips.",
-      "content": "Ireland has a well-connected public transport system that includes buses, trains, and trams, especially in cities like Dublin, Cork, Galway, and Limerick.\n\n**Main Transport Options:**\n1. **Dublin Bus and Go-Ahead Ireland**: Serve Dublin and surrounding areas.\n2. **Luas**: Dublin’s light rail system with Red and Green lines.\n3. **Irish Rail (Iarnród Éireann)**: Connects major cities and towns.\n4. **Bus Éireann**: National and regional bus services.\n\n**Student Discounts:**\nGet a **Student Leap Card**, which offers significant discounts on all public transport.\n- Available to full-time students aged 16+.\n- Apply online or at pop-up centers on university campuses.\n\n**Useful Apps:**\n- **Transport for Ireland (TFI)**: Real-time information and journey planning.\n- **Leap Top-Up App**: For topping up your Leap Card.\n- **Real Time Ireland**: To check live bus and train times.\n\n**Tips for Getting Around:**\n- Always tag on and off with your Leap Card to avoid penalty fares.\n- Travel off-peak when possible to save time and money.\n- For intercity trips, book train or bus tickets in advance for cheaper fares.\n\nPublic transport in Ireland is safe, reliable, and student-friendly, especially once you learn how to navigate the system efficiently."
-    },
-    {
-      "title": "Healthcare in Ireland: What International Students Need to Know",
-      "author": "Aditya Pandey",
-      "date": "May 13, 2025",
-      "image": "lib/assets/images/aditya.jpg",
-      "summary": "Understand how the Irish healthcare system works and what health services are available to international students.",
-      "content": "Healthcare is an important consideration when moving to Ireland for studies. While Ireland has a public healthcare system, it is not entirely free for international students.\n\n**Health Insurance Requirements:**\n- Non-EU/EEA students are required to have private health insurance when applying for a visa and for their residence permit.\n- Many universities offer health insurance packages upon enrollment. Alternatively, providers like VHI, Irish Life, and Laya offer student-specific plans.\n\n**General Practitioners (GPs):**\n- You’ll need to register with a GP for non-emergency care. Visits typically cost €50–€65.\n- Some universities offer on-campus medical centers with discounted or free consultations.\n\n**Emergency Services:**\n- For emergencies, dial 999 or 112.\n- Emergency room visits can be expensive without insurance, so it's important to have coverage.\n\n**Mental Health Support:**\n- Universities provide counseling services, often free of charge.\n- Organizations like Jigsaw, SpunOut, and Samaritans offer support lines and mental health resources for students.\n\n**Pharmacies and Medications:**\n- Prescriptions are not free; costs vary depending on medication and insurance.\n- Bring any essential medications with you and get documentation from your doctor in your home country.\n\nBeing informed and prepared will help you handle any health-related situation calmly and efficiently."
-    },
-    {
-      "title": "Part-Time Jobs in Ireland: A Guide for International Students",
-      "author": "Aditya Pandey",
-      "date": "May 13, 2025",
-      "image": "lib/assets/images/aditya.jpg",
-      "summary": "Explore how to find, apply for, and balance part-time jobs while studying in Ireland as an international student.",
-      "content": "Balancing academics with part-time work is a common reality for international students in Ireland. The Irish government allows students from non-EEA countries to work up to 20 hours per week during term time and up to 40 hours during holidays, under the Third Level Graduate Programme.\n\n**Finding a Job:**\n1. **Use university career services**: Many institutions post part-time openings on student portals.\n2. **Online job boards**: Websites like Jobs.ie, Indeed.ie, and IrishJobs.ie are good starting points.\n3. **Walk-ins**: Some cafes and retail stores hire directly. A friendly introduction and a printed CV can go a long way.\n\n**Popular Roles:**\n- Retail assistant\n- Waitstaff and baristas\n- Tutors (especially for native language or subject expertise)\n- Campus jobs such as library assistant or student ambassador\n\n**Balancing Work and Studies:**\nPrioritize your academic schedule and make sure work doesn’t interfere with classes. Employers near universities are often understanding of student commitments.\n\n**Legal Requirements:**\nEnsure your IRP (Irish Residence Permit) is up to date. You’ll also need a PPS number (Personal Public Service number) to work legally. Apply for one as soon as possible.\n\nWorking part-time can help with expenses and enhance your CV, but maintaining a balance is key."
-    },
-    {
-    "title": "Top Travel Tips for Visiting Ireland in 2025",
-    "author": "Aditya Pandey",
-    "date": "May 13, 2025",
-    "image": "lib/assets/images/aditya.jpg",
-    "summary": "Essential advice for tourists planning a trip to Ireland in 2025, covering new travel requirements, must-visit destinations, and practical tips.",
-    "content": "### ✈️ Travel Requirements\n\n- **UK Electronic Travel Authorization (ETA):** If you're planning to visit Northern Ireland, ensure you apply for the UK ETA in advance.\n- **Avoid Peak Times in Dublin:** To experience Dublin without the crowds, avoid visiting between August 14-27, when major events lead to increased tourism.\n\n### 🏖️ Must-Visit Destination: Ballydonegan Beach\n\n![Ballydonegan Beach](https://www.thesun.ie/wp-content/uploads/sites/3/2025/05/Ballydonegan-Beach.jpg)\n\nLocated in West Cork, approximately three hours from Dublin, Ballydonegan Beach is renowned for its white sands and dolphin sightings. The beach offers:\n\n- **Scenic Views:** Dramatic cliffs and panoramic views of the Atlantic Ocean.\n- **Activities:** Swimming, coastal walks, and marine life spotting.\n- **Amenities:** Nearby campsites and the Beara Barista café for refreshments.\n\n### 📱 Practical Tips\n\n- **SIM Cards:** Purchase a local SIM card upon arrival for easy navigation and communication.\n- **Driving:** If renting a car, remember that Ireland drives on the left side. Rural roads can be narrow, so drive cautiously.\n- **Currency:** While credit cards are widely accepted, it's advisable to carry some cash for smaller establishments.\n\nFor more detailed travel tips, visit [Ireland Family Vacations](https://irelandfamilyvacations.com/2025-Ireland-travel-tips/ireland-travel-tips/)."
-    },
-    {
-    "title": "Understanding All Types of Visas in Ireland: A 2025 Guide",
-    "author": "Aditya Pandey",
-    "date": "May 14, 2025",
-    "image": "lib/assets/images/aditya.jpg",
-    "summary": "Explore a comprehensive guide to all types of visas available in Ireland, including tourist, study, work, and residency permits with images and a comparison table.",
-    "content": "![Ireland Immigration](https://www.irishimmigration.ie/wp-content/uploads/2022/03/landingpagegraphic.png)\n\n# 🇮🇪 Ireland Visa Types Explained (2025)\n\nWhether you're planning a short visit, aiming to study, or looking to work and live in Ireland, it's essential to understand which visa suits your needs. Below is a detailed overview of the most common Irish visa categories as of 2025.\n\n---\n\n## 📌 Visa Categories in Ireland\n\n| Visa Type | Purpose | Duration | Key Requirement |\n|----------|---------|----------|-----------------|\n| **Short Stay 'C' Visa** | Tourism, short business trips | Up to 90 days | Proof of return & financial means |\n| **Long Stay 'D' Visa** | Work, study, join family | 90+ days | Letter of offer/admission & insurance |\n| **Student Visa** | Enroll in full-time education | Course duration | Proof of funds & acceptance letter |\n| **Work Permit Visa** | Employment in Ireland | 1–2 years (renewable) | Job offer in eligible field |\n| **Working Holiday Visa** | Travel + part-time work (specific countries only) | Usually 1 year | Age 18–30/35, depending on nationality |\n| **Join Family Visa** | Join Irish/EEA family members | Long-term | Relationship proof & accommodation details |\n| **Stamp 0/1/2/4** | Residency categories | Varies | Depends on visa type |\n\n---\n\n## ✈️ Short Stay Visa ('C')\n\nPerfect for tourists, short business meetings, or family visits. This visa doesn't allow you to work or access public services.\n\n![Dublin Castle](https://upload.wikimedia.org/wikipedia/commons/7/7b/Dublin_Castle%2C_Ireland.jpg)\n\n**Required Documents:**\n- Completed application form\n- Travel itinerary and accommodation\n- Proof of funds\n- Health insurance\n\nMore details: [INIS Short Stay](https://www.irishimmigration.ie/coming-to-visit-ireland/short-stay-visas/)\n\n---\n\n## 🎓 Student Visa ('D')\n\nFor international students enrolled in Irish institutions. Typically granted a **Stamp 2** permission.\n\n**Eligibility:**\n- Full-time program listed on ILEP (Interim List of Eligible Programmes)\n- Sufficient funds (€7,000 minimum)\n- Valid private health insurance\n\n**Perks:**\n- Part-time work rights: 20 hrs/week during term; 40 hrs/week on holidays\n\nUseful resource: [Education in Ireland](https://www.educationinireland.com/en/)\n\n---\n\n## 💼 Work Visas (Critical Skills & General Employment Permits)\n\n### 1. **Critical Skills Employment Permit**\n- For highly skilled jobs (e.g., IT, engineering, healthcare)\n- Minimum salary: €44,000–€64,000\n\n### 2. **General Employment Permit**\n- Broader eligibility\n- Requires Labour Market Needs Test\n\n![Ireland Work](https://www.enterprise.gov.ie/en/news-and-events/images/News-Enterprise.png)\n\n**Application Portal:** [EPOS](https://epos.enterprise.gov.ie/)\n\n---\n\n## 🧳 Working Holiday Authorisation\n\nAvailable only for nationals of Argentina, Australia, Canada, Chile, Hong Kong, Japan, New Zealand, South Korea, Taiwan, and the USA.\n\n- **Duration:** 1 year\n- **Age:** Typically 18–30 or 35 (depends on country)\n\nCheck official details by country: [DFA WHA](https://www.dfa.ie/travel/visas/working-holiday-visas/)\n\n---\n\n## 🏡 Join Family & Residence (Stamp 0–4)\n\n### Stamp Overview:\n- **Stamp 0:** Temporary stay (elderly dependents)\n- **Stamp 1:** Work permits\n- **Stamp 2:** Students\n- **Stamp 4:** Spouse, long-term residence\n\n**Join Family Visa** applies if you plan to live with Irish citizens or residents. Family reunification rights depend on the sponsor’s residency status.\n\n---\n\n## ✅ General Application Steps\n\n1. Determine the correct visa\n2. Apply online via AVATS ([www.visas.inis.gov.ie](http://www.visas.inis.gov.ie))\n3. Submit documents to your nearest Irish embassy/consulate\n4. Wait for decision (4–8 weeks typical)\n\n![Immigration Office](https://www.irishimmigration.ie/wp-content/uploads/2022/04/burghquayoffice.png)\n\n---\n\n## 🆕 2025 Visa & Immigration Updates\n\n- **Biometric requirements expanded** to include more countries\n- **Critical Skills List** revised in February 2025: now includes data analysts, green energy engineers\n- **Ireland Digital Nomad Visa** under consideration by Irish Parliament\n\nStay updated via [Irish Immigration News](https://www.irishimmigration.ie/news/).\n\n---\n\nIf you're unsure about your visa type or need guidance, contact the [Irish Immigration Service](https://www.irishimmigration.ie/) or visit your nearest Irish consulate. Always apply early and ensure documents are accurate!"
-    }
-  ];
-
+  List<Map<String, dynamic>> _articles = [];
   String _searchQuery = '';
   String _sortOption = 'Date (Newest)';
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadArticles();
+  }
+
+  void _loadArticles() async {
+    try {
+      final data = await ArticlesPageContent.loadArticlesFromJson();
+      if (!mounted) return;
+      setState(() {
+        _articles = data;
+        _loading = false;
+      });
+      if (widget.initialArticleIndex != null && widget.initialArticleIndex! >= 0 && widget.initialArticleIndex! < _articles.length) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ArticleDetailPage(article: _articles[widget.initialArticleIndex!]),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading articles: $e');
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
 
   List<Map<String, dynamic>> _getSortedArticles(List<Map<String, dynamic>> articles) {
-    List<Map<String, dynamic>> sorted = List<Map<String, dynamic>>.from(articles);
+    List<Map<String, dynamic>> sorted = List.from(articles);
     if (_sortOption == 'Author (A-Z)') {
-      sorted.sort((a, b) => a['author'].toLowerCase().compareTo(b['author'].toLowerCase()));
+      sorted.sort((a, b) => (a['author'] ?? '').toString().toLowerCase().compareTo((b['author'] ?? '').toString().toLowerCase()));
     } else if (_sortOption == 'Author (Z-A)') {
-      sorted.sort((a, b) => b['author'].toLowerCase().compareTo(a['author'].toLowerCase()));
+      sorted.sort((a, b) => (b['author'] ?? '').toString().toLowerCase().compareTo((a['author'] ?? '').toString().toLowerCase()));
     } else if (_sortOption == 'Date (Newest)') {
-      sorted.sort((a, b) => DateTime.parse(_parseDate(b['date'])).compareTo(DateTime.parse(_parseDate(a['date']))));
+      sorted.sort((a, b) => DateTime.parse(_parseDate(b['date'] ?? '')).compareTo(DateTime.parse(_parseDate(a['date'] ?? ''))));
     } else if (_sortOption == 'Date (Oldest)') {
-      sorted.sort((a, b) => DateTime.parse(_parseDate(a['date'])).compareTo(DateTime.parse(_parseDate(b['date']))));
+      sorted.sort((a, b) => DateTime.parse(_parseDate(a['date'] ?? '')).compareTo(DateTime.parse(_parseDate(b['date'] ?? ''))));
     }
     return sorted;
   }
 
   String _parseDate(String dateStr) {
-    // Try to parse common date formats
     try {
       return DateTime.parse(dateStr).toIso8601String();
     } catch (_) {
-      // Try to parse as 'Month Day, Year'
       try {
         final parts = dateStr.split(' ');
         if (parts.length == 3) {
@@ -108,167 +103,157 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     final filteredArticles = _articles.where((article) {
       final query = _searchQuery.toLowerCase();
-      return article['title'].toLowerCase().contains(query) ||
-          article['summary'].toLowerCase().contains(query) ||
-          article['content'].toLowerCase().contains(query);
+      final title = (article['title'] ?? '').toString().toLowerCase();
+      final summary = (article['summary'] ?? '').toString().toLowerCase();
+      final content = (article['content'] ?? '').toString().toLowerCase();
+      return title.contains(query) || summary.contains(query) || content.contains(query);
     }).toList();
     final sortedArticles = _getSortedArticles(filteredArticles);
 
-    return Scaffold(
-      backgroundColor: whiteColor,
-      appBar: AppBar(
-        title: Text(
-          'Verified Users Created Articles',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontFamily: GoogleFonts.poppins().fontFamily,
-                color: darkSlateGray,
-              ),
-        ),
-        backgroundColor: whiteColor,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search articles...',
-                      prefixIcon: Icon(Icons.search, color: emeraldGreen),
-                      filled: true,
-                      fillColor: lightGrey,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide.none,
-                      ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search articles...',
+                    prefixIcon: Icon(Icons.search, color: emeraldGreen),
+                    filled: true,
+                    fillColor: lightGrey,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
                     ),
-                    onChanged: (value) => setState(() => _searchQuery = value),
                   ),
+                  onChanged: (value) => setState(() => _searchQuery = value),
                 ),
-                const SizedBox(width: 12),
-                DropdownButton<String>(
-                  value: _sortOption,
-                  items: const [
-                    DropdownMenuItem(value: 'Date (Newest)', child: Text('Newest')),
-                    DropdownMenuItem(value: 'Date (Oldest)', child: Text('Oldest')),
-                    DropdownMenuItem(value: 'Author (A-Z)', child: Text('Author A-Z')),
-                    DropdownMenuItem(value: 'Author (Z-A)', child: Text('Author Z-A')),
-                  ],
-                  onChanged: (value) {
-                    if (value != null) setState(() => _sortOption = value);
-                  },
-                  underline: SizedBox(),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: darkSlateGray),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 12),
+              DropdownButton<String>(
+                value: _sortOption,
+                items: const [
+                  DropdownMenuItem(value: 'Date (Newest)', child: Text('Newest')),
+                  DropdownMenuItem(value: 'Date (Oldest)', child: Text('Oldest')),
+                  DropdownMenuItem(value: 'Author (A-Z)', child: Text('Author A-Z')),
+                  DropdownMenuItem(value: 'Author (Z-A)', child: Text('Author Z-A')),
+                ],
+                onChanged: (value) {
+                  if (value != null) setState(() => _sortOption = value);
+                },
+                underline: const SizedBox(),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: darkSlateGray),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ],
           ),
-          Expanded(
-            child: sortedArticles.isEmpty
-                ? Center(
-                    child: Text(
-                      'No articles found.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: mediumGrey),
-                    ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    itemCount: sortedArticles.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 18),
-                    itemBuilder: (context, index) {
-                      final article = sortedArticles[index];
-                      return GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ArticleDetailPage(article: article),
-                          ),
+        ),
+        Expanded(
+          child: sortedArticles.isEmpty
+              ? Center(
+                  child: Text(
+                    'No articles found.',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: mediumGrey),
+                  ),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  itemCount: sortedArticles.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 18),
+                  itemBuilder: (context, index) {
+                    final article = sortedArticles[index];
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ArticleDetailPage(article: article),
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: emeraldGreen.withOpacity(0.07),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: emeraldGreen.withOpacity(0.07),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          border: Border.all(color: emeraldGreen.withOpacity(0.13)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 22,
+                                backgroundImage: AssetImage((article['image'] ?? 'lib/assets/images/aditya.jpg').toString()),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      (article['title'] ?? 'Untitled').toString(),
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                            color: darkGreen,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          (article['author'] ?? 'Unknown').toString(),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: mediumGrey,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Icon(Icons.access_time, size: 15, color: mediumGrey),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          (article['date'] ?? '').toString(),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: mediumGrey,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      (article['summary'] ?? '').toString(),
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            color: darkSlateGray.withOpacity(0.85),
+                                          ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
-                            border: Border.all(color: emeraldGreen.withOpacity(0.13)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(18),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  radius: 22,
-                                  backgroundImage: AssetImage(article['image']),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        article['title'],
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                              color: darkGreen,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            article['author'],
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                  color: mediumGrey,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Icon(Icons.access_time, size: 15, color: mediumGrey),
-                                          const SizedBox(width: 2),
-                                          Text(
-                                            article['date'],
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                  color: mediumGrey,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        article['summary'],
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              color: darkSlateGray.withOpacity(0.85),
-                                            ),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 }
@@ -283,7 +268,7 @@ class ArticleDetailPage extends StatelessWidget {
       backgroundColor: whiteColor,
       appBar: AppBar(
         title: Text(
-          article['title'],
+          (article['title'] ?? 'Untitled').toString(),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontFamily: GoogleFonts.poppins().fontFamily,
                 color: darkSlateGray,
@@ -302,21 +287,21 @@ class ArticleDetailPage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundImage: AssetImage(article['image']),
+                  backgroundImage: AssetImage((article['image'] ?? 'lib/assets/images/aditya.jpg').toString()),
                 ),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      article['author'],
+                      (article['author'] ?? 'Unknown').toString(),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: darkGreen,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                     Text(
-                      article['date'],
+                      (article['date'] ?? '').toString(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: mediumGrey,
                           ),
@@ -327,7 +312,7 @@ class ArticleDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              article['title'],
+              (article['title'] ?? 'Untitled').toString(),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: emeraldGreen,
                     fontWeight: FontWeight.bold,
@@ -335,7 +320,7 @@ class ArticleDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             MarkdownBody(
-              data: article['content'],
+              data: (article['content'] ?? '').toString(),
               styleSheet: MarkdownStyleSheet(
                 p: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: darkSlateGray,

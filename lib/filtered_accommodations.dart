@@ -38,13 +38,13 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
 
   void _loadAccommodations() {
     _futureAccommodations = (widget.accommodations != null
-            ? Future.value(widget.accommodations)
-            : loadAccommodationsFromCsv())
+        ? Future.value(widget.accommodations)
+        : loadAccommodationsFromCsv())
         .then((data) {
-      print('Loaded ${data?.length ?? 0} accommodations');
+
       return _applyFilters(data ?? []);
     }).catchError((e) {
-      print('Error loading accommodations: $e');
+
       return <Map<String, dynamic>>[];
     });
   }

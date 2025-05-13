@@ -11,13 +11,6 @@ class HousingPageContent extends StatefulWidget {
 }
 
 class _HousingPageContentState extends State<HousingPageContent> {
-  final List<Map<String, dynamic>> _properties = [
-    {'name': 'Cozy Apartment', 'location': 'New York', 'price': '\$1,200'},
-    {'name': 'Luxury Condo', 'location': 'Los Angeles', 'price': '\$2,500'},
-    {'name': 'Modern Studio', 'location': 'San Francisco', 'price': '\$1,800'},
-    {'name': 'Spacious House', 'location': 'Chicago', 'price': '\$3,000'},
-  ];
-
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
@@ -25,13 +18,6 @@ class _HousingPageContentState extends State<HousingPageContent> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  List<Map<String, dynamic>> _getFilteredAccommodations() {
-    return _properties.where((property) {
-      final name = property['name']?.toString().toLowerCase() ?? '';
-      return name.contains(_searchQuery.toLowerCase());
-    }).toList();
   }
 
   @override
@@ -176,7 +162,7 @@ class _HousingPageContentState extends State<HousingPageContent> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => FilteredAccommodationsPage(
-                          accommodations: _getFilteredAccommodations(),
+                          // Do not pass accommodations, so CSV is loaded
                           searchQuery: _searchQuery,
                         ),
                       ),
