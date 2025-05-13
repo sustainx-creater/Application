@@ -51,7 +51,7 @@ class AboutUsPageContent extends StatelessWidget {
       {
         'name': 'Shivansh Bhatnagar',
         'role': 'Developer',
-        'image': 'lib/assets/images/male.jpg',
+        'image': 'lib/assets/images/shivansh.jpg',
         'linkedin': 'https://linkedin.com/in/shivanshbhatnagar',
       },
       {

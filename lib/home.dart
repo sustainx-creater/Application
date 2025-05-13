@@ -106,8 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   },
   backgroundColor: warmGold,
-  child: const Icon(Icons.chat_bubble, color: darkSlateGray),
   tooltip: 'Chat with EZMove',
+  child: const Icon(Icons.chat_bubble, color: darkSlateGray),
 ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [

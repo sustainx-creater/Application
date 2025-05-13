@@ -6,7 +6,7 @@ class ChatbotService {
   static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZm9teG1xb2V5ZnV3a3FsenlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwMDgyMDEsImV4cCI6MjA2MTU4NDIwMX0.erme360AeqVMShEVDXJadwZ0wJQP7Wb3-X_QRlsRsRk';
 
   // Map of casual phrases to responses
-  Map<String, String> _casualResponses = {
+  final Map<String, String> _casualResponses = {
     r'^(hi|hello|hey)$': 'Hey there! How can I assist you today?',
     r'^(good morning|morning)$': 'Good morning! Ready to tackle your immigration questions?',
     r'^(good afternoon|afternoon)$': 'Good afternoon! What’s on your mind?',
