@@ -51,15 +51,24 @@ class _ChatbotPageContentState extends State<ChatbotPageContent> {
           });
         });
       } else {
-        // Proceed with embedding-based Q&A for non-casual queries
-        final embedding = await service.generateEmbedding(query);
-        final result = await service.matchQA(embedding);
-        setState(() {
-          _messages.add({
-            'sender': 'bot',
-            'text': 'Here’s what I found: ${result['answer']}',
+        // Send query to Flask server
+        final result = await service.sendQuery(query);
+        final similarity = result['similarity'] as double;
+        if (similarity >= 0.7) {
+          setState(() {
+            _messages.add({
+              'sender': 'bot',
+              'text': result['response'],
+            });
           });
-        });
+        } else {
+          setState(() {
+            _messages.add({
+              'sender': 'bot',
+              'text': 'Sorry, I’m not sure about that. Could you ask about visas, work, housing, or Irish culture?',
+            });
+          });
+        }
       }
     } catch (e) {
       const errorMessage = 'Sorry, I don’t have an answer for this question. '

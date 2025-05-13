@@ -2,11 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:animate_do/animate_do.dart';
 import 'aboutus.dart';
 import 'chatbot.dart';
 import 'community.dart';
 import 'housing.dart';
 import 'theme.dart';
+import 'articles.dart';
+import 'dart:ui';
 
 final supabase = Supabase.instance.client;
 
@@ -27,6 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'Housing',
     'Community',
     'About Us',
+    'Articles',
   ];
 
   @override
@@ -37,9 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
       HomePageContent(
         onNavigateToIndex: (index) => _onItemTapped(index),
       ),
-      const HousingPageContent(),
+      HousingPageContent(),
       const CommunityPageContent(),
       const AboutUsPageContent(),
+      const ArticlesPageContent(),
     ];
   }
 
@@ -60,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: darkSlateGray,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: whiteColor,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
@@ -71,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ? const Icon(Icons.person, color: whiteColor)
                   : ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: 'https://cdn-icons-png.flaticon.com/512/64/64572.png', // Replace with user profile URL
+                        imageUrl: 'https://cdn-icons-png.flaticon.com/512/64/64572.png',
                         width: 36,
                         height: 36,
                         fit: BoxFit.cover,
@@ -90,25 +95,25 @@ class _MyHomePageState extends State<MyHomePage> {
         children: _pages,
       ),
       floatingActionButton: FloatingActionButton(
-  onPressed: () async {
-    try {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ChatbotPageContent()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to open chat: $e'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-    }
-  },
-  backgroundColor: warmGold,
-  tooltip: 'Chat with EZMove',
-  child: const Icon(Icons.chat_bubble, color: darkSlateGray),
-),
+        onPressed: () async {
+          try {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatbotPageContent()),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to open chat: $e'),
+                backgroundColor: Colors.redAccent,
+              ),
+            );
+          }
+        },
+        backgroundColor: warmGold,
+        tooltip: 'Chat with EZMove',
+        child: const Icon(Icons.chat_bubble, color: darkSlateGray),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -131,14 +136,19 @@ class _MyHomePageState extends State<MyHomePage> {
             activeIcon: Icon(Icons.info),
             label: 'About',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article_outlined),
+            activeIcon: Icon(Icons.article),
+            label: 'Articles',
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: emeraldGreen,
-        unselectedItemColor: darkSlateGray.withValues(alpha: 0.6),
+        unselectedItemColor: darkSlateGray.withOpacity(0.6),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: whiteColor,
         elevation: 10,
       ),
     );
@@ -184,7 +194,7 @@ class ProfileDrawer extends StatelessWidget {
             ),
             accountEmail: Text(
               user?.email ?? 'Not signed in',
-              style: GoogleFonts.poppins(color: whiteColor.withValues(alpha: 0.8)),
+              style: GoogleFonts.poppins(color: whiteColor.withOpacity(0.8)),
             ),
             currentAccountPicture: CircleAvatar(
               radius: 40,
@@ -221,7 +231,7 @@ class ProfileDrawer extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               'EZMove v1.0.0',
-              style: GoogleFonts.poppins(color: darkSlateGray.withValues(alpha: 0.6)),
+              style: GoogleFonts.poppins(color: darkSlateGray.withOpacity(0.6)),
             ),
           ),
         ],
@@ -239,29 +249,7 @@ class HomePageContent extends StatefulWidget {
   State<HomePageContent> createState() => _HomePageContentState();
 }
 
-class _HomePageContentState extends State<HomePageContent> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
@@ -269,32 +257,49 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
       '/housing': 1,
       '/community': 2,
       '/aboutus': 3,
+      '/articles': 4,
     };
 
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hero Section with Parallax Effect
-            Container(
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Hero Section with Glassmorphism
+          FadeInDown(
+            duration: const Duration(milliseconds: 600),
+            child: Container(
               height: 300,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [emeraldGreen.withValues(alpha: 0.9), darkGreen],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: whiteColor.withOpacity(0.8),
+                border: Border.all(color: mintGreen.withOpacity(0.5)),
+                boxShadow: [
+                  BoxShadow(
+                    color: mediumGrey.withOpacity(0.1),
+                    blurRadius: 15,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
               ),
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.2,
-                      child: Image.network(
-                        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?fit=crop&w=1350&q=80',
-                        fit: BoxFit.cover,
+                    child: Image.network(
+                      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?fit=crop&w=1350&q=80',
+                      fit: BoxFit.cover,
+                      color: Colors.black.withOpacity(0.3),
+                      colorBlendMode: BlendMode.darken,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          emeraldGreen.withOpacity(0.2),
+                          mintGreen.withOpacity(0.1),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
                     ),
                   ),
@@ -309,18 +314,25 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
                             style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                            color: whiteColor,
+                              color: whiteColor,
+                              shadows: [
+                                Shadow(
+                                  color: darkSlateGray.withOpacity(0.3),
+                                  blurRadius: 5,
+                                  offset: const Offset(2, 2),
+                                ),
+                              ],
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 12),
                           Text(
                             user == null
                                 ? 'Sign in to explore your new home'
                                 : 'Your journey starts here',
                             style: GoogleFonts.poppins(
                               fontSize: 18,
-                              color: whiteColor.withValues(alpha: 0.9),
+                              color: whiteColor.withOpacity(0.9),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -331,29 +343,34 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
                 ],
               ),
             ),
-            // Feature Cards
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+          ),
+          // Feature Cards
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FadeInUp(
+                  duration: const Duration(milliseconds: 700),
+                  child: Text(
                     'Discover EZMove',
-                    style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: darkSlateGray,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                          color: darkSlateGray,
+                        ),
                   ),
-                  const SizedBox(height: 16),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    children: [
-                      _buildFeatureCard(
+                ),
+                const SizedBox(height: 16),
+                GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  children: [
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 800),
+                      child: _buildFeatureCard(
                         context,
                         'Find Housing',
                         Icons.house,
@@ -361,7 +378,10 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
                         emeraldGreen,
                         routeToIndexMap,
                       ),
-                      _buildFeatureCard(
+                    ),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 900),
+                      child: _buildFeatureCard(
                         context,
                         'Join Community',
                         Icons.people,
@@ -369,7 +389,10 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
                         warmGold,
                         routeToIndexMap,
                       ),
-                      _buildFeatureCard(
+                    ),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 1000),
+                      child: _buildFeatureCard(
                         context,
                         'About Us',
                         Icons.info,
@@ -377,64 +400,119 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
                         darkGreen,
                         routeToIndexMap,
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            // Auth Prompt for Unauthenticated Users
-            if (user == null)
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                color: Colors.grey[100],
-                child: Column(
-                  children: [
-                    Text(
-                      'Get Started with EZMove',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: darkSlateGray,
+                    ),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 1100),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ArticlesPageContent()),
+                          );
+                        },
+                        child: _buildFeatureCard(
+                          context,
+                          'Articles',
+                          Icons.article,
+                          '/articles',
+                          warmGold,
+                          routeToIndexMap,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Sign in or create an account to unlock all features.',
-                      style: GoogleFonts.poppins(color: darkSlateGray),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => Navigator.pushNamed(context, '/signin'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: emeraldGreen,
-                            foregroundColor: whiteColor,
-                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                          child: Text('Sign In', style: GoogleFonts.poppins()),
-                        ),
-                        const SizedBox(width: 10),
-                        OutlinedButton(
-                          onPressed: () => Navigator.pushNamed(context, '/signup'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: emeraldGreen,
-                            side: const BorderSide(color: emeraldGreen),
-                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                          child: Text('Sign Up', style: GoogleFonts.poppins()),
-                        ),
-                      ],
                     ),
                   ],
                 ),
+              ],
+            ),
+          ),
+          // Auth Prompt for Unauthenticated Users
+          if (user == null)
+            BounceInDown(
+              duration: const Duration(milliseconds: 1200),
+              child: Container(
+                margin: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: lightGrey.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: mintGreen.withOpacity(0.5)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: mediumGrey.withOpacity(0.1),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Get Started with EZMove',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                color: darkSlateGray,
+                              ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Sign in or create an account to unlock all features.',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                color: darkSlateGray,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => Navigator.pushNamed(context, '/signin'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: emeraldGreen,
+                                foregroundColor: whiteColor,
+                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              child: Text(
+                                'Sign In',
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      fontFamily: GoogleFonts.poppins().fontFamily,
+                                      color: whiteColor,
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            OutlinedButton(
+                              onPressed: () => Navigator.pushNamed(context, '/signup'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: emeraldGreen,
+                                side: const BorderSide(color: emeraldGreen),
+                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              child: Text(
+                                'Sign Up',
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      fontFamily: GoogleFonts.poppins().fontFamily,
+                                      color: emeraldGreen,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -447,7 +525,8 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
     Color color,
     Map<String, int> routeMap,
   ) {
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
       onTap: () {
         final targetIndex = routeMap[route];
         if (targetIndex != null) {
@@ -458,31 +537,32 @@ class _HomePageContentState extends State<HomePageContent> with SingleTickerProv
           );
         }
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+      child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withOpacity(0.18), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
+              color: color.withOpacity(0.08),
+              blurRadius: 12,
               offset: const Offset(0, 4),
             ),
           ],
         ),
+        padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: color),
-            const SizedBox(height: 10),
+            Icon(icon, size: 38, color: color),
+            const SizedBox(height: 12),
             Text(
               title,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: darkSlateGray,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: darkSlateGray,
+                    fontSize: 16,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],
