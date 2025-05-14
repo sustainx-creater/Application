@@ -31,7 +31,7 @@ flutter:
   uses-material-design: true
   assets:
     - lib/assets/images/
-    - lib/assets/reduced_columns_data.csv
+    - lib/assets/files/reduced_columns_data.csv
     - lib/assets/animations/hero_background.json
     - lib/assets/animations/chat.json
     - lib/assets/files/articles.json

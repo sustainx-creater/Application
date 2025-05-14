@@ -218,7 +218,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                         fillColor: lightGrey,
                       ),
                       value: tempState,
-                      items: ['DELETED'] // Replace with actual states
+                      items: ['DELETED','PUBLISHED'] // Replace with actual states
                           .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                           .toList(),
                       onChanged: (value) => tempState = value,

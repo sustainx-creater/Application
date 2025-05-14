@@ -4,7 +4,7 @@ import 'package:csv/csv.dart';
 
 Future<List<Map<String, dynamic>>> loadAccommodationsFromCsv() async {
   try {
-    final csvString = await rootBundle.loadString('lib/assets/reduced_columns_data.csv');
+    final csvString = await rootBundle.loadString('lib/assets/files/reduced_columns_data.csv');
     final csvParser = CsvToListConverter(
       eol: '\n',
       fieldDelimiter: ',', // Ensure comma is the delimiter
