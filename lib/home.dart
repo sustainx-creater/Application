@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +11,8 @@ import 'housing.dart';
 import 'articles.dart';
 import 'theme.dart';
 import '_trending_articles_slideshow.dart';
+import 'filtered_accommodations.dart';
+import 'utils/csv_reader.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -401,6 +402,112 @@ class _HomePageContentState extends State<HomePageContent> {
             child: TrendingArticlesSlideshow(
               onNavigateToIndex: widget.onNavigateToIndex,
             ),
+          ),
+          // Featured Housing Section
+          FutureBuilder<List<Map<String, dynamic>>>(
+            future: loadAccommodationsFromCsv(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final allHousing = snapshot.data!;
+              if (allHousing.isEmpty) {
+                return const Center(child: Text('No featured housing found.'));
+              }
+              allHousing.shuffle();
+              final featured = allHousing.take(3).toList();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                    child: Text(
+                      'Featured Housing',
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 22,
+                        color: darkSlateGray,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 170,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: featured.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 16),
+                      itemBuilder: (context, i) {
+                        final house = featured[i];
+                        return GestureDetector(
+                          onTap: () async {
+                            widget.onNavigateToIndex(1); // Switch to Housing tab
+                            await Future.delayed(const Duration(milliseconds: 300));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => FilteredAccommodationsPage(
+                                  accommodations: [house],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 260,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(18),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: emeraldGreen.withOpacity(0.07),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                              border: Border.all(color: emeraldGreen.withOpacity(0.13)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  (house['propertyType'] ?? 'Property'),
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    color: darkSlateGray,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  (house['address'] ?? house['location'] ?? 'No address'),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                    color: mediumGrey.withOpacity(0.9),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '€${house['price'] ?? 'N/A'}',
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: emeraldGreen,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           // Feature Carousel
           Padding(

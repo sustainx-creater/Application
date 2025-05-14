@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-const Color darkSlateGray = Color(0xFF334155);
+const Color darkSlateGray = 
+Color(0xFF334155);
 const Color mintGreen = Color(0xFFCCFBF1);
 const Color emeraldGreen = Color(0xFF14B8A6);
 const Color darkGreen = Color(0xFF104E44);
