@@ -1,4 +1,3 @@
-
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,9 +36,7 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
         trending = shuffled.take(3).toList();
         _loading = false;
       });
-      if (trending.isEmpty) {
-        debugPrint('No articles loaded for trending slideshow!');
-      } else {
+      if (trending.isNotEmpty) {
         _startAutoSlide();
       }
     } catch (e) {
@@ -74,6 +71,8 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -91,7 +90,7 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w700,
               fontSize: 22,
-              color: darkSlateGray,
+              color: darkSlateGray, // optional: theme.textTheme.displaySmall?.color
             ),
           ),
         ),
@@ -105,11 +104,8 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
             itemBuilder: (context, i) {
               final article = trending[i];
               return GestureDetector(
-                onTap: () async {
-                  if (!mounted) return;
-                  // Switch to Articles tab (index 4)
+                onTap: () {
                   widget.onNavigateToIndex?.call(4);
-                  // Navigate to ArticleDetailPage directly
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -121,7 +117,7 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
                   duration: const Duration(milliseconds: 300),
                   margin: EdgeInsets.symmetric(horizontal: 8, vertical: _currentPage == i ? 0 : 16),
                   decoration: BoxDecoration(
-                    color: whiteColor,
+                    color: whiteColor, // or theme.scaffoldBackgroundColor
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -154,15 +150,25 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
                         const SizedBox(height: 8),
                         Text(
                           (article['summary'] ?? article['content'] ?? '')
-                              .toString()
-                              .replaceAll(RegExp(r'[#*\-\n]'), '')
-                              .substring(
-                                0,
-                                (article['summary'] ?? article['content'] ?? '').toString().length > 80
-                                    ? 80
-                                    : (article['summary'] ?? article['content'] ?? '').toString().length,
-                              ) +
-                              ((article['summary'] ?? article['content'] ?? '').toString().length > 80 ? '...' : ''),
+                                  .toString()
+                                  .replaceAll(RegExp(r'[#*\-\n]'), '')
+                                  .substring(
+                                    0,
+                                    (article['summary'] ?? article['content'] ?? '')
+                                                .toString()
+                                                .length >
+                                            80
+                                        ? 80
+                                        : (article['summary'] ?? article['content'] ?? '')
+                                            .toString()
+                                            .length,
+                                  ) +
+                              ((article['summary'] ?? article['content'] ?? '')
+                                          .toString()
+                                          .length >
+                                      80
+                                  ? '...'
+                                  : ''),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -211,7 +217,9 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
               margin: const EdgeInsets.symmetric(horizontal: 3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: i == _currentPage ? emeraldGreen : mediumGrey.withOpacity(0.3),
+                color: i == _currentPage
+                    ? emeraldGreen
+                    : mediumGrey.withOpacity(0.3),
               ),
             ),
           ),

@@ -124,15 +124,15 @@ class _MyHomePageState extends State<MyHomePage> {
             fillColor: Colors.transparent,
             elevation: 0,
             shape: const CircleBorder(),
+            constraints: const BoxConstraints.tightFor(width: 100, height: 100),
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
             child: Lottie.asset(
               'lib/assets/animations/chat.json',
               width: 100,
               height: 100,
               fit: BoxFit.contain,
             ),
-            constraints: const BoxConstraints.tightFor(width: 100, height: 100),
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
           ),
         ),
       ),
@@ -328,18 +328,25 @@ class _HomePageContentState extends State<HomePageContent> {
           // Hero Section with Parallax
           Stack(
             children: [
-              Container(
-                height: 350,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [emeraldGreen.withOpacity(0.8), warmGold.withOpacity(0.6)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 600, // Prevents excessive stretching on large screens
                   ),
-                ),
-                child: Lottie.asset(
-                  'lib/assets/animations/hero_background.json',
-                  fit: BoxFit.cover,
+                  child: Container(
+                    height: 350,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [emeraldGreen.withOpacity(0.8), warmGold.withOpacity(0.6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Lottie.asset(
+                      'lib/assets/animations/hero_background.json',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               Positioned.fill(

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ChatbotService {
-  final String apiUrl = 'http://localhost:5000/query'; // Matches your curl command
+  final String apiUrl = 'http://10.0.2.2:5000/query'; // For emulator; update to Hugging Face URL later
 
   // Map of casual phrases to responses
   final Map<String, String> _casualResponses = {
@@ -50,13 +50,13 @@ class ChatbotService {
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'question': query}),
-      ).timeout(const Duration(seconds: 10), onTimeout: () {
+      ).timeout(const Duration(seconds: 20), onTimeout: () {
         throw Exception('Request timed out');
       });
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        print('Flask Response: $result');
+        print('Query: $query, Response: ${result['response']}, Similarity: ${result['similarity']}, Intent: ${result['intent']}');
         return result;
       } else {
         throw Exception('Failed to get response: ${response.statusCode}');

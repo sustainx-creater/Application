@@ -20,6 +20,7 @@ dependencies:
   animate_do: ^3.3.4
   flutter_markdown: ^0.7.7+1
   lottie: ^2.7.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -34,7 +35,6 @@ flutter:
     - lib/assets/files/reduced_columns_data.csv
     - lib/assets/animations/hero_background.json
     - lib/assets/animations/chat.json
-    - lib/assets/files/articles.json
 
 flutter_icons:
   android: true
