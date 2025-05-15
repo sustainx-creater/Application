@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter/scheduler.dart';
 import 'aboutus.dart';
 import 'chatbot.dart';
 import 'community.dart';
@@ -94,6 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
+        actions: [
+          _buildPageHamburgerMenu(_selectedIndex, context),
+        ],
       ),
       drawer: ProfileDrawer(onSignOut: _signOut),
       body: IndexedStack(
@@ -203,6 +208,125 @@ class _MyHomePageState extends State<MyHomePage> {
         SnackBar(content: Text('Unexpected error: $e'), backgroundColor: Colors.redAccent),
       );
     }
+  }
+
+  Widget _buildPageHamburgerMenu(int pageIndex, BuildContext context) {
+    Color menuColor = emeraldGreen;
+    List<PopupMenuEntry<String>> items;
+    IconData iconData = Icons.menu_rounded;
+    switch (pageIndex) {
+      case 1: // Housing
+        items = [
+          PopupMenuItem(
+            value: 'Show Listings',
+            child: Row(
+              children: [
+                Icon(Icons.list_alt, color: menuColor),
+                const SizedBox(width: 10),
+                const Text('Show Listings'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 'Add Listing',
+            child: Row(
+              children: [
+                Icon(Icons.add_home_work, color: menuColor),
+                const SizedBox(width: 10),
+                const Text('Add Listing'),
+              ],
+            ),
+          ),
+        ];
+        break;
+      case 4: // Articles
+        items = [
+          PopupMenuItem(
+            value: 'Write Article',
+            child: Row(
+              children: [
+                Icon(Icons.edit_note, color: menuColor),
+                const SizedBox(width: 10),
+                const Text('Write Article'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 'Your Articles',
+            child: Row(
+              children: [
+                Icon(Icons.article, color: menuColor),
+                const SizedBox(width: 10),
+                const Text('Your Articles'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 'Delete Article',
+            child: Row(
+              children: [
+                Icon(Icons.delete_forever, color: Colors.redAccent),
+                const SizedBox(width: 10),
+                const Text('Delete Article'),
+              ],
+            ),
+          ),
+        ];
+        break;
+      default:
+        items = [
+          PopupMenuItem(
+            value: 'Dummy Option',
+            child: Row(
+              children: [
+                Icon(Icons.more_horiz, color: menuColor),
+                const SizedBox(width: 10),
+                const Text('Dummy Option'),
+              ],  
+            ),
+          ),
+        ];
+    }
+    return Theme(
+      data: Theme.of(context).copyWith(
+        cardColor: whiteColor,
+        iconTheme: IconThemeData(color: menuColor),
+        popupMenuTheme: PopupMenuThemeData(
+          color: whiteColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          elevation: 8,
+        ),
+      ),
+      child: PopupMenuButton<String>(
+        icon: Container(
+          decoration: BoxDecoration(
+            color: menuColor.withOpacity(0.13),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: menuColor.withOpacity(0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Icon(iconData, color: menuColor, size: 28),
+        ),
+        onSelected: (value) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$value Clicked'),
+              backgroundColor: menuColor.withOpacity(0.9),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+          );
+        },
+        itemBuilder: (context) => items,
+      ),
+    );
   }
 }
 
@@ -410,7 +534,7 @@ class _HomePageContentState extends State<HomePageContent> {
               onNavigateToIndex: widget.onNavigateToIndex,
             ),
           ),
-          // Featured Housing Section
+          // Featured Housing Section as Slideshow
           FutureBuilder<List<Map<String, dynamic>>>(
             future: loadAccommodationsFromCsv(),
             builder: (context, snapshot) {
@@ -423,96 +547,19 @@ class _HomePageContentState extends State<HomePageContent> {
               }
               allHousing.shuffle();
               final featured = allHousing.take(3).toList();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-                    child: Text(
-                      'Featured Housing',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 22,
-                        color: darkSlateGray,
+              return _FeaturedHousingSlideshow(
+                featured: featured,
+                onNavigateToDetail: (house) async {
+                  widget.onNavigateToIndex(1); // Switch to Housing tab
+                  await Future.delayed(const Duration(milliseconds: 300));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => FilteredAccommodationsPage(
+                        accommodations: [house],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 170,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: featured.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 16),
-                      itemBuilder: (context, i) {
-                        final house = featured[i];
-                        return GestureDetector(
-                          onTap: () async {
-                            widget.onNavigateToIndex(1); // Switch to Housing tab
-                            await Future.delayed(const Duration(milliseconds: 300));
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => FilteredAccommodationsPage(
-                                  accommodations: [house],
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 260,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(18),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: emeraldGreen.withOpacity(0.07),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                              border: Border.all(color: emeraldGreen.withOpacity(0.13)),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  (house['propertyType'] ?? 'Property'),
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                    color: darkSlateGray,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  (house['address'] ?? house['location'] ?? 'No address'),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13,
-                                    color: mediumGrey.withOpacity(0.9),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '€${house['price'] ?? 'N/A'}',
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 15,
-                                    color: emeraldGreen,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                  );
+                },
               );
             },
           ),
@@ -709,6 +756,165 @@ class _HomePageContentState extends State<HomePageContent> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FeaturedHousingSlideshow extends StatefulWidget {
+  final List<Map<String, dynamic>> featured;
+  final Function(Map<String, dynamic>) onNavigateToDetail;
+
+  const _FeaturedHousingSlideshow({
+    required this.featured,
+    required this.onNavigateToDetail,
+  });
+
+  @override
+  State<_FeaturedHousingSlideshow> createState() => _FeaturedHousingSlideshowState();
+}
+
+class _FeaturedHousingSlideshowState extends State<_FeaturedHousingSlideshow> with SingleTickerProviderStateMixin {
+  int _current = 0;
+  late final PageController _controller;
+  late final int _length;
+  late final Duration _autoSlideDuration;
+  late final Duration _animationDuration;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController(viewportFraction: 0.88);
+    _length = widget.featured.length;
+    _autoSlideDuration = const Duration(seconds: 4);
+    _animationDuration = const Duration(milliseconds: 500);
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    _timer?.cancel();
+    _timer = Timer.periodic(_autoSlideDuration, (_) {
+      if (!mounted) return;
+      int next = (_current + 1) % _length;
+      _controller.animateToPage(
+        next,
+        duration: _animationDuration,
+        curve: Curves.easeInOut,
+      );
+      setState(() => _current = next);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          child: Text(
+            'Featured Housing',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w700,
+              fontSize: 22,
+              color: darkSlateGray,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 180,
+          child: PageView.builder(
+            controller: _controller,
+            itemCount: widget.featured.length,
+            onPageChanged: (i) {
+              setState(() => _current = i);
+              _startAutoSlide(); // Reset timer on manual swipe
+            },
+            itemBuilder: (context, i) {
+              final house = widget.featured[i];
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: EdgeInsets.symmetric(horizontal: _current == i ? 8 : 16, vertical: _current == i ? 0 : 12),
+                child: GestureDetector(
+                  onTap: () => widget.onNavigateToDetail(house),
+                  child: Container(
+                    width: 260,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: emeraldGreen.withOpacity(0.07),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                      border: Border.all(color: emeraldGreen.withOpacity(0.13)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          (house['propertyType'] ?? 'Property'),
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: darkSlateGray,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          (house['address'] ?? house['location'] ?? 'No address'),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: mediumGrey.withOpacity(0.9),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '€${house['price'] ?? 'N/A'}',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            color: emeraldGreen,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            widget.featured.length,
+            (i) => Container(
+              width: 10,
+              height: 10,
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _current == i ? emeraldGreen : mediumGrey.withOpacity(0.3),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
