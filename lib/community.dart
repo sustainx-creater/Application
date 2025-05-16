@@ -59,25 +59,25 @@ class CommunityPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+    return const SingleChildScrollView(
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const WelcomeSection(),
-          const SizedBox(height: 20),
-          const HeroSection(),
-          const SizedBox(height: 20),
-          const FeaturesSection(),
-          const SizedBox(height: 20),
-          const FAQsSection(),
-          const SizedBox(height: 20),
-          const RecentQuestionsSection(),
-          const SizedBox(height: 20),
-          const AskQuestionSection(),
-          const SizedBox(height: 20),
-          const ContactUsSection(),
-          const SizedBox(height: 20),
+          WelcomeSection(),
+          SizedBox(height: 20),
+          HeroSection(),
+          SizedBox(height: 20),
+          FeaturesSection(),
+          SizedBox(height: 20),
+          FAQsSection(),
+          SizedBox(height: 20),
+          RecentQuestionsSection(),
+          SizedBox(height: 20),
+          AskQuestionSection(),
+          SizedBox(height: 20),
+          ContactUsSection(),
+          SizedBox(height: 20),
         ],
       ),
     );

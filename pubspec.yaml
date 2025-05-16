@@ -4,28 +4,28 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.0-209.1.beta
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   supabase_flutter: ^2.0.0
   cupertino_icons: ^1.0.8
-  url_launcher: ^6.1.12
+  url_launcher: ^6.2.5
   http: ^1.2.2
   cached_network_image: ^3.3.1
   google_fonts: ^6.1.0
   flutter_staggered_animations: ^1.1.1
   csv: ^6.0.0
-  animate_do: ^3.3.4
+  animate_do: ^3.1.2
   flutter_markdown: ^0.7.7+1
-  lottie: ^2.7.0
+  lottie: ^3.0.0
   flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^3.0.1
   flutter_launcher_icons: ^0.13.1
 
 flutter:

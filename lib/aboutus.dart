@@ -80,7 +80,7 @@ class AboutUsPageContent extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
               ),
               child: Center(
                 child: AnimationConfiguration.synchronized(

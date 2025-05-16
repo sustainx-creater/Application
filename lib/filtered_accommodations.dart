@@ -235,9 +235,9 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                         fillColor: lightGrey,
                       ),
                       value: tempShared,
-                      items: [
-                        const DropdownMenuItem(value: true, child: Text('Shared')),
-                        const DropdownMenuItem(value: false, child: Text('Not Shared')),
+                      items: const [
+                        DropdownMenuItem(value: true, child: Text('Shared')),
+                        DropdownMenuItem(value: false, child: Text('Not Shared')),
                       ],
                       onChanged: (value) => tempShared = value,
                     ),
@@ -344,7 +344,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
         backgroundColor: emeraldGreen,
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list, color: whiteColor),
+            icon: const Icon(Icons.filter_list, color: whiteColor),
             onPressed: _showFilterDialog,
             tooltip: 'Filter',
           ),
@@ -354,7 +354,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
         future: _futureAccommodations,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(color: emeraldGreen),
             );
           }
@@ -467,7 +467,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                               ),
                                               ZoomIn(
                                                 duration: const Duration(milliseconds: 400),
-                                                child: Icon(
+                                                child: const Icon(
                                                   Icons.home,
                                                   color: emeraldGreen,
                                                   size: 30,
@@ -478,7 +478,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 16),
                                           Row(
                                             children: [
-                                              Icon(Icons.king_bed, color: darkGreen, size: 24),
+                                              const Icon(Icons.king_bed, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'Bedrooms: ${acc['numBedrooms'] ?? 'N/A'}',
@@ -491,7 +491,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 12),
                                           Row(
                                             children: [
-                                              Icon(Icons.location_on, color: darkGreen, size: 24),
+                                              const Icon(Icons.location_on, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'State: ${acc['state'] ?? 'N/A'}',
@@ -504,7 +504,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 12),
                                           Row(
                                             children: [
-                                              Icon(Icons.person, color: darkGreen, size: 24),
+                                              const Icon(Icons.person, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'Seller: ${acc['seller'] ?? 'N/A'}',
@@ -517,7 +517,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 12),
                                           Row(
                                             children: [
-                                              Icon(Icons.group, color: darkGreen, size: 24),
+                                              const Icon(Icons.group, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'Shared: ${acc['shared_or_not'] == '1' ? 'Shared' : 'Not shared'}',
@@ -530,7 +530,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 12),
                                           Row(
                                             children: [
-                                              Icon(Icons.square_foot, color: darkGreen, size: 24),
+                                              const Icon(Icons.square_foot, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'Size: ${acc['propertySize_m'] ?? 'N/A'} m²',
@@ -543,7 +543,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 12),
                                           Row(
                                             children: [
-                                              Icon(Icons.directions_walk, color: darkGreen, size: 24),
+                                              const Icon(Icons.directions_walk, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'Distance: ${acc['sph_dist'] ?? 'N/A'} km',
@@ -556,7 +556,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                           const SizedBox(height: 12),
                                           Row(
                                             children: [
-                                              Icon(Icons.calendar_today, color: darkGreen, size: 24),
+                                              const Icon(Icons.calendar_today, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
                                                 'Days on site: ${acc['days_on_site'] ?? 'N/A'}',

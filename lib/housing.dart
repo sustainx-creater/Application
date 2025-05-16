@@ -29,8 +29,8 @@ class _HousingPageContentState extends State<HousingPageContent> {
       'https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
     ];
 
-    final String predictionStatus = "wait";
-    final String predictionMessage = predictionStatus == "good"
+    const String predictionStatus = "wait";
+    const String predictionMessage = predictionStatus == "good"
         ? "It's a great time to rent a property!"
         : predictionStatus == "bad"
             ? "Not a good time to rent. Prices are high."
@@ -76,7 +76,7 @@ class _HousingPageContentState extends State<HousingPageContent> {
                       hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: mediumGrey,
                           ),
-                      prefixIcon: Icon(Icons.search, color: darkGreen),
+                      prefixIcon: const Icon(Icons.search, color: darkGreen),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -92,7 +92,7 @@ class _HousingPageContentState extends State<HousingPageContent> {
               // Price Prediction Widget
               SlideInLeft(
                 duration: const Duration(milliseconds: 400),
-                child: PricePredictionWidget(
+                child: const PricePredictionWidget(
                   status: predictionStatus,
                   message: predictionMessage,
                 ),
@@ -145,7 +145,7 @@ class _HousingPageContentState extends State<HousingPageContent> {
               const SizedBox(height: 12),
               BounceInDown(
                 duration: const Duration(milliseconds: 700),
-                child: MarketStats(
+                child: const MarketStats(
                   averagePrice: '\$2,500',
                   priceGrowth: '3.5%',
                   availablePlaces: '500+',

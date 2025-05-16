@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:lottie/lottie.dart';
-import 'package:flutter/scheduler.dart';
 import 'aboutus.dart';
 import 'chatbot.dart';
 import 'community.dart';
@@ -68,8 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
             _pageTitles[_selectedIndex],
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w700,
-              fontSize: 24,
+              fontSize: 26,
               color: darkSlateGray,
+              letterSpacing: -0.5,
             ),
           ),
         ),
@@ -79,9 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => IconButton(
             icon: CircleAvatar(
               radius: 20,
-              backgroundColor: emeraldGreen,
+              backgroundColor: emeraldGreen.withOpacity(0.1),
               child: supabase.auth.currentUser == null
-                  ? const Icon(Icons.person, color: Colors.white)
+                  ? const Icon(Icons.person, color: darkSlateGray)
                   : ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: 'https://cdn-icons-png.flaticon.com/512/64/64572.png',
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         actions: [
-          _buildPageHamburgerMenu(_selectedIndex, context),
+          _buildStylishMenu(_selectedIndex, context),
         ],
       ),
       drawer: ProfileDrawer(onSignOut: _signOut),
@@ -108,8 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Pulse(
         duration: const Duration(milliseconds: 1500),
         child: SizedBox(
-          width: 100,
-          height: 100,
+          width: 80,
+          height: 80,
           child: RawMaterialButton(
             onPressed: () async {
               try {
@@ -126,16 +126,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }
             },
-            fillColor: Colors.transparent,
-            elevation: 0,
+            fillColor: Colors.transparent, // Changed to fully transparent
+            elevation: 0, // Optional: Removed elevation for a flatter look
             shape: const CircleBorder(),
-            constraints: const BoxConstraints.tightFor(width: 100, height: 100),
+            constraints: const BoxConstraints.tightFor(width: 80, height: 80),
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             child: Lottie.asset(
               'lib/assets/animations/chat.json',
-              width: 100,
-              height: 100,
+              width: 60,
+              height: 60,
               fit: BoxFit.contain,
             ),
           ),
@@ -144,49 +144,51 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: whiteColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
-              color: darkSlateGray.withOpacity(0.1),
-              blurRadius: 20,
-              spreadRadius: 5,
+              color: darkSlateGray.withOpacity(0.05),
+              blurRadius: 15,
+              spreadRadius: 2,
             ),
           ],
         ),
         child: BottomNavigationBar(
-          items: [
+          items: const [
             BottomNavigationBarItem(
-              icon: const Icon(Icons.home_outlined, size: 28),
-              activeIcon: Icon(Icons.home, size: 28, color: emeraldGreen),
+              icon: Icon(Icons.home_outlined, size: 30),
+              activeIcon: Icon(Icons.home, size: 30, color: emeraldGreen),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.house_outlined, size: 28),
-              activeIcon: Icon(Icons.house, size: 28, color: emeraldGreen),
+              icon: Icon(Icons.house_outlined, size: 30),
+              activeIcon: Icon(Icons.house, size: 30, color: emeraldGreen),
               label: 'Housing',
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.people_outline, size: 28),
-              activeIcon: Icon(Icons.people, size: 28, color: emeraldGreen),
+              icon: Icon(Icons.people_outline, size: 30),
+              activeIcon: Icon(Icons.people, size: 30, color: emeraldGreen),
               label: 'Community',
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.info_outline, size: 28),
-              activeIcon: Icon(Icons.info, size: 28, color: emeraldGreen),
+              icon: Icon(Icons.info_outline, size: 30),
+              activeIcon: Icon(Icons.info, size: 30, color: emeraldGreen),
               label: 'About',
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.article_outlined, size: 28),
-              activeIcon: Icon(Icons.article, size: 28, color: emeraldGreen),
+              icon: Icon(Icons.article_outlined, size: 30),
+              activeIcon: Icon(Icons.article, size: 30, color: emeraldGreen),
               label: 'Articles',
             ),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
-          selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-          unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w400),
+          selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12),
+          unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 12),
           selectedItemColor: emeraldGreen,
-          unselectedItemColor: darkSlateGray.withOpacity(0.5),
+          unselectedItemColor: darkSlateGray.withOpacity(0.4),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
         ),
       ),
     );
@@ -210,122 +212,103 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Widget _buildPageHamburgerMenu(int pageIndex, BuildContext context) {
-    Color menuColor = emeraldGreen;
-    List<PopupMenuEntry<String>> items;
-    IconData iconData = Icons.menu_rounded;
-    switch (pageIndex) {
-      case 1: // Housing
-        items = [
-          PopupMenuItem(
-            value: 'Show Listings',
-            child: Row(
-              children: [
-                Icon(Icons.list_alt, color: menuColor),
-                const SizedBox(width: 10),
-                const Text('Show Listings'),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: 'Add Listing',
-            child: Row(
-              children: [
-                Icon(Icons.add_home_work, color: menuColor),
-                const SizedBox(width: 10),
-                const Text('Add Listing'),
-              ],
-            ),
-          ),
-        ];
-        break;
-      case 4: // Articles
-        items = [
-          PopupMenuItem(
-            value: 'Write Article',
-            child: Row(
-              children: [
-                Icon(Icons.edit_note, color: menuColor),
-                const SizedBox(width: 10),
-                const Text('Write Article'),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: 'Your Articles',
-            child: Row(
-              children: [
-                Icon(Icons.article, color: menuColor),
-                const SizedBox(width: 10),
-                const Text('Your Articles'),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: 'Delete Article',
-            child: Row(
-              children: [
-                Icon(Icons.delete_forever, color: Colors.redAccent),
-                const SizedBox(width: 10),
-                const Text('Delete Article'),
-              ],
-            ),
-          ),
-        ];
-        break;
-      default:
-        items = [
-          PopupMenuItem(
-            value: 'Dummy Option',
-            child: Row(
-              children: [
-                Icon(Icons.more_horiz, color: menuColor),
-                const SizedBox(width: 10),
-                const Text('Dummy Option'),
-              ],  
-            ),
-          ),
-        ];
-    }
-    return Theme(
-      data: Theme.of(context).copyWith(
-        cardColor: whiteColor,
-        iconTheme: IconThemeData(color: menuColor),
-        popupMenuTheme: PopupMenuThemeData(
-          color: whiteColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          elevation: 8,
+  Widget _buildStylishMenu(int pageIndex, BuildContext context) {
+    final List<Map<String, dynamic>> menuItems = switch (pageIndex) {
+      1 => [
+          {'title': 'Show Listings', 'icon': Icons.list_alt},
+          {'title': 'Add Listing', 'icon': Icons.add_home_work},
+        ],
+      4 => [
+          {'title': 'Write Article', 'icon': Icons.edit_note},
+          {'title': 'Your Articles', 'icon': Icons.article},
+          {'title': 'Delete Article', 'icon': Icons.delete_forever, 'color': Colors.redAccent},
+        ],
+      _ => [
+          {'title': 'More Options', 'icon': Icons.more_horiz},
+        ],
+    };
+
+    return MenuAnchor(
+      style: MenuStyle(
+        backgroundColor: const WidgetStatePropertyAll(whiteColor),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
+        elevation: const WidgetStatePropertyAll(12),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
       ),
-      child: PopupMenuButton<String>(
-        icon: Container(
-          decoration: BoxDecoration(
-            color: menuColor.withOpacity(0.13),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: menuColor.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+      builder: (context, controller, child) {
+        return InkWell(
+          onTap: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [emeraldGreen.withOpacity(0.15), warmGold.withOpacity(0.1)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: emeraldGreen.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                controller.isOpen ? Icons.close : Icons.menu_rounded,
+                key: ValueKey<bool>(controller.isOpen),
+                color: emeraldGreen,
+                size: 28,
+              ),
+            ),
+          ),
+        );
+      },
+      menuChildren: menuItems.map((item) {
+        return MenuItemButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${item['title']} Clicked'),
+                backgroundColor: emeraldGreen,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+            );
+          },
+          child: Row(
+            children: [
+              Icon(
+                item['icon'],
+                color: item['color'] ?? emeraldGreen,
+                size: 22,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                item['title'],
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: item['color'] ?? darkSlateGray,
+                ),
               ),
             ],
           ),
-          padding: const EdgeInsets.all(8),
-          child: Icon(iconData, color: menuColor, size: 28),
-        ),
-        onSelected: (value) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$value Clicked'),
-              backgroundColor: menuColor.withOpacity(0.9),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-          );
-        },
-        itemBuilder: (context) => items,
-      ),
+        );
+      }).toList(),
     );
   }
 }
@@ -344,19 +327,19 @@ class ProfileDrawer extends StatelessWidget {
     return Drawer(
       backgroundColor: whiteColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.horizontal(right: Radius.circular(24)),
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(30)),
       ),
       child: Column(
         children: [
           Container(
-            height: 200,
+            height: 220,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [emeraldGreen, warmGold.withOpacity(0.7)],
+                colors: [emeraldGreen, warmGold.withOpacity(0.6)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
             ),
             child: Center(
               child: ZoomIn(
@@ -364,25 +347,25 @@ class ProfileDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.white,
+                      radius: 60,
+                      backgroundColor: whiteColor.withOpacity(0.9),
                       child: ClipOval(
                         child: CachedNetworkImage(
                           imageUrl: profileImageUrl,
-                          width: 100,
-                          height: 100,
+                          width: 120,
+                          height: 120,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => const Icon(Icons.person, color: darkSlateGray),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
                     Text(
                       userName,
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.w700,
-                        fontSize: 20,
+                        fontSize: 22,
                         color: Colors.white,
                       ),
                     ),
@@ -391,7 +374,7 @@ class ProfileDrawer extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withOpacity(0.7),
                       ),
                     ),
                   ],
@@ -399,10 +382,10 @@ class ProfileDrawer extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           ListTile(
-            leading: const Icon(Icons.logout, color: darkSlateGray),
-            title: Text('Sign Out', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+            leading: const Icon(Icons.logout, color: darkSlateGray, size: 26),
+            title: Text('Sign Out', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16)),
             onTap: () {
               onSignOut();
               Navigator.pop(context);
@@ -410,12 +393,13 @@ class ProfileDrawer extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: Text(
               'EZMove v2.0.0',
               style: GoogleFonts.inter(
-                color: darkSlateGray.withOpacity(0.6),
+                color: darkSlateGray.withOpacity(0.5),
                 fontWeight: FontWeight.w500,
+                fontSize: 12,
               ),
             ),
           ),
@@ -449,92 +433,148 @@ class _HomePageContentState extends State<HomePageContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Hero Section with Parallax
-          Stack(
-            children: [
-              Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 600, // Prevents excessive stretching on large screens
-                  ),
-                  child: Container(
-                    height: 350,
+          // Hero Section
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final screenHeight = MediaQuery.of(context).size.height;
+              final screenWidth = MediaQuery.of(context).size.width;
+              final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+              final isLargeScreen = screenWidth > 600;
+              final heroHeight = isLandscape
+                  ? screenHeight * 0.65
+                  : screenHeight * 0.5;
+              final clampedHeight = heroHeight.clamp(280.0, 450.0);
+
+              return Stack(
+                children: [
+                  Container(
+                    height: clampedHeight,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [emeraldGreen.withOpacity(0.8), warmGold.withOpacity(0.6)],
+                        colors: [emeraldGreen.withOpacity(0.7), warmGold.withOpacity(0.5)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Lottie.asset(
-                      'lib/assets/animations/hero_background.json',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                child: FadeInDown(
-                  duration: const Duration(milliseconds: 800),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Discover Your New Home',
-                            style: GoogleFonts.inter(
-                              fontSize: 36,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(
-                                  color: darkSlateGray.withOpacity(0.4),
-                                  blurRadius: 10,
-                                  offset: const Offset(2, 2),
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            user == null
-                                ? 'Join EZMove to start your journey'
-                                : 'Welcome back, ${user.userMetadata?['name'] ?? 'Explorer'}!',
-                            style: GoogleFonts.inter(
-                              fontSize: 18,
-                              color: Colors.white.withOpacity(0.9),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          if (user == null) ...[
-                            const SizedBox(height: 20),
-                            BounceInUp(
-                              child: ElevatedButton(
-                                onPressed: () => Navigator.pushNamed(context, '/signup'),
-                                child: const Text('Get Started'),
-                              ),
-                            ),
-                          ],
-                        ],
+                    child: Opacity(
+                      opacity: 0.3,
+                      child: Lottie.asset(
+                        'lib/assets/animations/hero_background.json',
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                  Positioned.fill(
+                    child: FadeInDown(
+                      duration: const Duration(milliseconds: 1000),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: isLargeScreen ? 800 : screenWidth * 0.9,
+                            maxHeight: clampedHeight * 0.9,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isLargeScreen ? 40.0 : 20.0,
+                              vertical: isLandscape ? 20.0 : 30.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    'Live Better Abroad',
+                                    style: GoogleFonts.inter(
+                                      fontSize: isLargeScreen
+                                          ? (isLandscape ? 36 : 48)
+                                          : (isLandscape ? 32 : 40),
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                      letterSpacing: -1,
+                                      shadows: [
+                                        Shadow(
+                                          color: darkSlateGray.withOpacity(0.3),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Flexible(
+                                  child: Text(
+                                    'Housing, Local Insights & Human-Like Chat Support for Expats, Students & Tourists',
+                                    style: GoogleFonts.inter(
+                                      fontSize: isLargeScreen
+                                          ? (isLandscape ? 16 : 18)
+                                          : (isLandscape ? 14 : 16),
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white.withOpacity(0.9),
+                                      height: 1.5,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                if (user == null)
+                                  BounceInUp(
+                                    child: ElevatedButton(
+                                      onPressed: () => Navigator.pushNamed(context, '/signup'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: emeraldGreen,
+                                        foregroundColor: whiteColor,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: isLargeScreen ? 40 : 24,
+                                          vertical: isLandscape ? 12 : 16,
+                                        ),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                        elevation: 4,
+                                      ),
+                                      child: Text(
+                                        'Start Your Journey',
+                                        style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: isLandscape ? 14 : 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                if (user != null)
+                                  Flexible(
+                                    child: Text(
+                                      'Welcome back, ${user.userMetadata?['name'] ?? 'Explorer'}!',
+                                      style: GoogleFonts.inter(
+                                        fontSize: isLargeScreen
+                                            ? (isLandscape ? 18 : 20)
+                                            : (isLandscape ? 16 : 18),
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
-          // Trending Articles Slideshow
+          // Trending Articles
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: TrendingArticlesSlideshow(
               onNavigateToIndex: widget.onNavigateToIndex,
             ),
           ),
-          // Featured Housing Section as Slideshow
+          // Featured Housing
           FutureBuilder<List<Map<String, dynamic>>>(
             future: loadAccommodationsFromCsv(),
             builder: (context, snapshot) {
@@ -550,7 +590,7 @@ class _HomePageContentState extends State<HomePageContent> {
               return _FeaturedHousingSlideshow(
                 featured: featured,
                 onNavigateToDetail: (house) async {
-                  widget.onNavigateToIndex(1); // Switch to Housing tab
+                  widget.onNavigateToIndex(1);
                   await Future.delayed(const Duration(milliseconds: 300));
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -565,7 +605,7 @@ class _HomePageContentState extends State<HomePageContent> {
           ),
           // Feature Carousel
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -574,15 +614,16 @@ class _HomePageContentState extends State<HomePageContent> {
                   child: Text(
                     'Explore EZMove',
                     style: GoogleFonts.inter(
-                      fontSize: 24,
+                      fontSize: 28,
                       fontWeight: FontWeight.w700,
                       color: darkSlateGray,
+                      letterSpacing: -0.5,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 SizedBox(
-                  height: 200,
+                  height: 220,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
@@ -594,7 +635,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         emeraldGreen,
                         routeToIndexMap,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       _buildFeatureCard(
                         context,
                         'Join Community',
@@ -603,7 +644,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         warmGold,
                         routeToIndexMap,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       _buildFeatureCard(
                         context,
                         'About Us',
@@ -612,7 +653,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         emeraldGreen,
                         routeToIndexMap,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       _buildFeatureCard(
                         context,
                         'Articles',
@@ -632,61 +673,73 @@ class _HomePageContentState extends State<HomePageContent> {
             BounceInDown(
               duration: const Duration(milliseconds: 1200),
               child: Container(
-                margin: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
                   color: whiteColor,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: darkSlateGray.withOpacity(0.1),
+                      color: darkSlateGray.withOpacity(0.05),
                       blurRadius: 20,
-                      spreadRadius: 5,
+                      spreadRadius: 2,
                     ),
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(32.0),
                   child: Column(
                     children: [
                       Text(
-                        'Unlock EZMove',
+                        'Unlock Your Journey',
                         style: GoogleFonts.inter(
-                          fontSize: 20,
+                          fontSize: 24,
                           fontWeight: FontWeight.w700,
                           color: darkSlateGray,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Text(
-                        'Sign in or create an account to access all features.',
+                        'Sign in or create an account to access exclusive features and personalized insights.',
                         style: GoogleFonts.inter(
                           fontSize: 16,
                           color: darkSlateGray.withOpacity(0.7),
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () => Navigator.pushNamed(context, '/signin'),
-                            child: const Text('Sign In'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: emeraldGreen,
+                              foregroundColor: whiteColor,
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              elevation: 4,
+                            ),
+                            child: Text(
+                              'Sign In',
+                              style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 16),
                           OutlinedButton(
                             onPressed: () => Navigator.pushNamed(context, '/signup'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: emeraldGreen,
-                              side: const BorderSide(color: emeraldGreen),
+                              side: BorderSide(color: emeraldGreen.withOpacity(0.5)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                             ),
                             child: Text(
                               'Sign Up',
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
+                                fontSize: 16,
                                 color: emeraldGreen,
                               ),
                             ),
@@ -712,7 +765,7 @@ class _HomePageContentState extends State<HomePageContent> {
     Map<String, int> routeMap,
   ) {
     return InkWell(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(30),
       onTap: () {
         final targetIndex = routeMap[route];
         if (targetIndex != null) {
@@ -722,33 +775,33 @@ class _HomePageContentState extends State<HomePageContent> {
         }
       },
       child: Container(
-        width: 160,
+        width: 180,
         decoration: BoxDecoration(
           color: whiteColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.2),
-              blurRadius: 12,
+              color: color.withOpacity(0.1),
+              blurRadius: 15,
               offset: const Offset(0, 4),
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 30,
+              radius: 40,
               backgroundColor: color.withOpacity(0.1),
-              child: Icon(icon, size: 32, color: color),
+              child: Icon(icon, size: 40, color: color),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Text(
               title,
               style: GoogleFonts.inter(
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
+                fontSize: 18,
                 color: darkSlateGray,
               ),
               textAlign: TextAlign.center,
@@ -784,10 +837,10 @@ class _FeaturedHousingSlideshowState extends State<_FeaturedHousingSlideshow> wi
   @override
   void initState() {
     super.initState();
-    _controller = PageController(viewportFraction: 0.88);
+    _controller = PageController(viewportFraction: 0.85);
     _length = widget.featured.length;
     _autoSlideDuration = const Duration(seconds: 4);
-    _animationDuration = const Duration(milliseconds: 500);
+    _animationDuration = const Duration(milliseconds: 600);
     _startAutoSlide();
   }
 
@@ -799,7 +852,7 @@ class _FeaturedHousingSlideshowState extends State<_FeaturedHousingSlideshow> wi
       _controller.animateToPage(
         next,
         duration: _animationDuration,
-        curve: Curves.easeInOut,
+        curve: Curves.easeInOutCubic,
       );
       setState(() => _current = next);
     });
@@ -818,80 +871,123 @@ class _FeaturedHousingSlideshowState extends State<_FeaturedHousingSlideshow> wi
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
           child: Text(
             'Featured Housing',
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w700,
-              fontSize: 22,
+              fontSize: 28,
               color: darkSlateGray,
+              letterSpacing: -0.5,
             ),
           ),
         ),
         SizedBox(
-          height: 180,
+          height: 260,
           child: PageView.builder(
             controller: _controller,
             itemCount: widget.featured.length,
             onPageChanged: (i) {
               setState(() => _current = i);
-              _startAutoSlide(); // Reset timer on manual swipe
+              _startAutoSlide();
             },
             itemBuilder: (context, i) {
               final house = widget.featured[i];
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: EdgeInsets.symmetric(horizontal: _current == i ? 8 : 16, vertical: _current == i ? 0 : 12),
-                child: GestureDetector(
-                  onTap: () => widget.onNavigateToDetail(house),
+              return GestureDetector(
+                onTap: () => widget.onNavigateToDetail(house),
+                child: AnimatedScale(
+                  duration: const Duration(milliseconds: 300),
+                  scale: _current == i ? 1.0 : 0.95,
                   child: Container(
-                    width: 260,
-                    padding: const EdgeInsets.all(16),
+                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: whiteColor,
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: emeraldGreen.withOpacity(0.07),
-                          blurRadius: 12,
+                          color: emeraldGreen.withOpacity(0.1),
+                          blurRadius: 15,
                           offset: const Offset(0, 4),
                         ),
                       ],
-                      border: Border.all(color: emeraldGreen.withOpacity(0.13)),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          (house['propertyType'] ?? 'Property'),
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: darkSlateGray,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 140,
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      (house['propertyType'] ?? 'Property'),
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: darkSlateGray,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      (house['address'] ?? house['location'] ?? 'No address'),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13,
+                                        color: mediumGrey.withOpacity(0.8),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      '€${house['price'] ?? 'N/A'}',
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        color: emeraldGreen,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          (house['address'] ?? house['location'] ?? 'No address'),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: mediumGrey.withOpacity(0.9),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: warmGold.withOpacity(0.9),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.favorite_border,
+                                color: whiteColor,
+                                size: 18,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '€${house['price'] ?? 'N/A'}',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: emeraldGreen,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -899,17 +995,21 @@ class _FeaturedHousingSlideshowState extends State<_FeaturedHousingSlideshow> wi
             },
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.featured.length,
-            (i) => Container(
-              width: 10,
-              height: 10,
-              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _current == i ? emeraldGreen : mediumGrey.withOpacity(0.3),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.featured.length,
+              (i) => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: _current == i ? 12 : 8,
+                height: 8,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _current == i ? emeraldGreen : mediumGrey.withOpacity(0.3),
+                ),
               ),
             ),
           ),

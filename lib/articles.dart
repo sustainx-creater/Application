@@ -65,7 +65,7 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
   String _searchQuery = '';
   String _sortOption = 'Date (Newest)';
   bool _loading = true;
-  List<String> _selectedTags = [];
+  final List<String> _selectedTags = [];
 
   static const List<String> _topTags = [
     'Visa',
@@ -218,7 +218,7 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
                   ),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: Icon(Icons.clear, color: mediumGrey),
+                          icon: const Icon(Icons.clear, color: mediumGrey),
                           onPressed: () => setState(() => _searchQuery = ''),
                         )
                       : null,
@@ -378,7 +378,7 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
                                               ),
                                         ),
                                         const SizedBox(width: 12),
-                                        Icon(Icons.access_time, size: 16, color: mediumGrey),
+                                        const Icon(Icons.access_time, size: 16, color: mediumGrey),
                                         const SizedBox(width: 4),
                                         Text(
                                           (article['date'] ?? '').toString(),
