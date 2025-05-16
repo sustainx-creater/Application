@@ -33,8 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
     'EZMove',
     'Housing',
     'Community',
-    'About Us',
     'Articles',
+    'About Us',
   ];
 
   @override
@@ -47,8 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       const HousingPageContent(),
       const CommunityPageContent(),
-      const AboutUsPageContent(),
       const ArticlesPageContent(),
+      const AboutUsPageContent()
     ];
   }
 
@@ -171,14 +171,14 @@ class _MyHomePageState extends State<MyHomePage> {
               label: 'Community',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.info_outline, size: 30),
-              activeIcon: Icon(Icons.info, size: 30, color: emeraldGreen),
-              label: 'About',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.article_outlined, size: 30),
               activeIcon: Icon(Icons.article, size: 30, color: emeraldGreen),
               label: 'Articles',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info_outline, size: 30),
+              activeIcon: Icon(Icons.info, size: 30, color: emeraldGreen),
+              label: 'About',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -425,8 +425,8 @@ class _HomePageContentState extends State<HomePageContent> {
     final routeToIndexMap = {
       '/housing': 1,
       '/community': 2,
-      '/aboutus': 3,
-      '/articles': 4,
+      '/articles': 3,
+      '/aboutus': 4,
     };
 
     return SingleChildScrollView(
@@ -647,21 +647,22 @@ class _HomePageContentState extends State<HomePageContent> {
                       const SizedBox(width: 16),
                       _buildFeatureCard(
                         context,
-                        'About Us',
-                        Icons.info,
-                        '/aboutus',
-                        emeraldGreen,
-                        routeToIndexMap,
-                      ),
-                      const SizedBox(width: 16),
-                      _buildFeatureCard(
-                        context,
                         'Articles',
                         Icons.article,
                         '/articles',
                         warmGold,
                         routeToIndexMap,
                       ),
+                      const SizedBox(width: 16),
+                      _buildFeatureCard(
+                        context,
+                        'About Us',
+                        Icons.info,
+                        '/aboutus',
+                        emeraldGreen,
+                        routeToIndexMap,
+                      ),
+                      
                     ],
                   ),
                 ),

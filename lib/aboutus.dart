@@ -191,7 +191,7 @@ class AboutUsPageContent extends StatelessWidget {
 
     final milestones = [
       {'year': 'Sep 2024', 'event': 'Conceived EZMove, won Citi Upstart spot'},
-      {'year': '2024', 'event': 'Conducted 100+ user interviews'},
+      {'year': 'Nov 2024', 'event': 'Conducted 100+ user interviews'},
       {'year': 'Jun/Jul 2025', 'event': 'Planned app release in Ireland'},
       {'year': '2026', 'event': 'Expand to USA, EU, Australia'},
     ];
