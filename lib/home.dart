@@ -218,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
           {'title': 'Show Listings', 'icon': Icons.list_alt},
           {'title': 'Add Listing', 'icon': Icons.add_home_work},
         ],
-      4 => [
+      3 => [
           {'title': 'Write Article', 'icon': Icons.edit_note},
           {'title': 'Your Articles', 'icon': Icons.article},
           {'title': 'Delete Article', 'icon': Icons.delete_forever, 'color': Colors.redAccent},
