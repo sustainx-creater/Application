@@ -485,7 +485,7 @@ class _HomePageContentState extends State<HomePageContent> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    'Live Better Abroad',
+                                    'New Place, New Possibilities',
                                     style: GoogleFonts.inter(
                                       fontSize: isLargeScreen
                                           ? (isLandscape ? 36 : 48)
