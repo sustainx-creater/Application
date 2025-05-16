@@ -507,7 +507,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                 const SizedBox(height: 8),
                                 Flexible(
                                   child: Text(
-                                    'Housing, Local Insights & Human-Like Chat Support for Expats, Students & Tourists',
+                                    'Housing, Local Insights & Human-Like Chat Support for Students, Expats & Tourists',
                                     style: GoogleFonts.inter(
                                       fontSize: isLargeScreen
                                           ? (isLandscape ? 16 : 18)
