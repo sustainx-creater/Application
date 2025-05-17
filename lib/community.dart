@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'theme.dart';
+import 'community_forum.dart';
 
 // Simulated logged-in user ID
 const String currentUserId = 'user123';
@@ -19,7 +20,7 @@ class GroupManager {
   static void addGroup(String name, String type, bool isPrivate, String adminId) {
     _groups.add({
       'name': name,
-      'members': 1, // Creator is the first member
+      'members': 1,
       'adminId': adminId,
       'type': type,
       'isPrivate': isPrivate,
@@ -44,12 +45,18 @@ class CommunityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Community'),
-        backgroundColor: emeraldGreen,
-        foregroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
-      body: const CommunityPageContent(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: premiumGradient,
+        ),
+        child: const CommunityPageContent(),
+      ),
     );
   }
 }
@@ -59,25 +66,19 @@ class CommunityPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WelcomeSection(),
-          SizedBox(height: 20),
-          HeroSection(),
-          SizedBox(height: 20),
-          FeaturesSection(),
-          SizedBox(height: 20),
-          FAQsSection(),
-          SizedBox(height: 20),
-          RecentQuestionsSection(),
-          SizedBox(height: 20),
-          AskQuestionSection(),
-          SizedBox(height: 20),
-          ContactUsSection(),
-          SizedBox(height: 20),
+          const SizedBox(height: 80),
+          const WelcomeSection(),
+          const SizedBox(height: 24),
+          const FeaturesSection(),
+          const SizedBox(height: 24),
+          const InterestGroupsSection(),
+          const SizedBox(height: 24),
+          const ContactUsSection(),
         ],
       ),
     );
@@ -89,231 +90,241 @@ class WelcomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("👋 Welcome to the Community!");
-  }
-}
-
-class HeroSection extends StatelessWidget {
-  const HeroSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      color: mintGreen,
-      child: const Text(
-        "Explore groups, events, and meet people!",
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: whiteColor.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: darkSlateGray.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            r"Welcome father's to Our Community!",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Connect with like-minded people, join groups, and explore events.',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
       ),
     );
   }
 }
 
-class FAQsSection extends StatelessWidget {
-  const FAQsSection({super.key});
+class FeaturesSection extends StatelessWidget {
+  const FeaturesSection({super.key});
 
-  final List<Map<String, String>> faqs = const [
-    {
-      'question': 'What is the Community page about?',
-      'answer': 'The Community page connects people with shared interests through groups, events, and the Buddy System.'
-    },
-    {
-      'question': 'How can I join a group?',
-      'answer': 'Navigate to Interest Groups, select a group, and click "Join" to participate in the group chat.'
-    },
-    {
-      'question': 'Is there a cost to use the Buddy System?',
-      'answer': 'Yes, buddies charge a rate (e.g., €10/hour). You need to make a payment to connect.'
-    },
-    {
-      'question': 'Can I create a private group?',
-      'answer': 'Yes, when creating a group, you can toggle the "Private Group" option to make it private.'
-    },
-    {
-      'question': 'How do I contact support?',
-      'answer': 'Use the "Contact Us" section to send an email to our support team.'
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '❓ Frequently Asked Questions',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        const SizedBox(height: 10),
-        ...faqs.map((faq) => ExpansionTile(
-              title: Text(
-                faq['question']!,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(faq['answer']!),
-                ),
-              ],
-            )),
-      ],
-    );
-  }
-}
-
-class RecentQuestionsSection extends StatelessWidget {
-  const RecentQuestionsSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text("📝 Recent questions will appear here.");
-  }
-}
-
-class AskQuestionSection extends StatefulWidget {
-  const AskQuestionSection({super.key});
-
-  @override
-  State<AskQuestionSection> createState() => _AskQuestionSectionState();
-}
-
-class _AskQuestionSectionState extends State<AskQuestionSection> {
-  final TextEditingController _questionController = TextEditingController();
-  final List<Map<String, dynamic>> _questions = [];
-  final Map<int, TextEditingController> _answerControllers = {};
-
-  void _submitQuestion() {
-    if (_questionController.text.trim().isEmpty) return;
-    setState(() {
-      _questions.add({
-        'question': _questionController.text.trim(),
-        'answers': <String>[],
-      });
-      _questionController.clear();
-    });
-  }
-
-  void _submitAnswer(int questionIndex) {
-    final controller = _answerControllers[questionIndex];
-    if (controller == null || controller.text.trim().isEmpty) return;
-    setState(() {
-      _questions[questionIndex]['answers'].add(controller.text.trim());
-      controller.clear();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '💬 Ask a Question',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _questionController,
-                decoration: const InputDecoration(
-                  hintText: 'Type your question...',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: _submitQuestion,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: emeraldGreen,
-                foregroundColor: Colors.white,
-              ),
-              child: const Icon(Icons.send),
+  Widget _buildFeatureCard(
+      String title, IconData icon, BuildContext context, VoidCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: darkSlateGray.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        const SizedBox(height: 10),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _questions.length,
-          itemBuilder: (context, index) {
-            final question = _questions[index];
-            _answerControllers[index] ??= TextEditingController();
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ExpansionTile(
-                title: Text(
-                  question['question'],
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        ...question['answers'].map<Widget>((answer) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Icon(Icons.comment, color: emeraldGreen, size: 20),
-                                  const SizedBox(width: 8),
-                                  Expanded(child: Text(answer)),
-                                ],
-                              ),
-                            )),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _answerControllers[index],
-                                decoration: const InputDecoration(
-                                  hintText: 'Type your answer...',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: () => _submitAnswer(index),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: emeraldGreen,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Icon(Icons.reply),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 40, color: emeraldGreen),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   @override
-  void dispose() {
-    _questionController.dispose();
-    for (var controller in _answerControllers.values) {
-      controller.dispose();
-    }
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Explore Features',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(height: 16),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.2,
+          children: [
+            _buildFeatureCard('Buddy System', Icons.people_alt_outlined, context, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BuddySystemPage()),
+              );
+            }),
+            _buildFeatureCard('Local Events', Icons.event_available_outlined, context, null),
+            _buildFeatureCard('Interest Groups', Icons.interests_outlined, context, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const InterestGroupsPage()),
+              );
+            }),
+            _buildFeatureCard('Community Forum', Icons.forum_outlined, context, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CommunityForumPage()),
+              );
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class InterestGroupsSection extends StatelessWidget {
+  const InterestGroupsSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final interestGroups = GroupManager.getGroups();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Interest Groups',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const InterestGroupsPage()),
+                );
+              },
+              child: const Text('View All'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: interestGroups.length,
+            itemBuilder: (context, index) {
+              final group = interestGroups[index];
+              return Container(
+                width: 160,
+                margin: const EdgeInsets.only(right: 16),
+                child: GroupCard(group: group),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class GroupCard extends StatelessWidget {
+  final Map<String, dynamic> group;
+
+  const GroupCard({super.key, required this.group});
+
+  @override
+  Widget build(BuildContext context) {
+    final groupName = group['name'] as String;
+    final membersCount = group['members'] as int;
+    final isPrivate = group['isPrivate'] as bool;
+    final groupType = group['type'] as String;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GroupChatPage(
+              groupName: groupName,
+              openChat: true,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: darkSlateGray.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              groupName,
+              style: Theme.of(context).textTheme.titleMedium,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '$membersCount Members',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: mediumGrey),
+            ),
+            Text(
+              groupType,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: mediumGrey),
+            ),
+            if (isPrivate)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Chip(
+                  label: const Text('Private', style: TextStyle(fontSize: 12, color: whiteColor)),
+                  backgroundColor: emeraldGreen,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class ContactUsSection extends StatelessWidget {
   const ContactUsSection({super.key});
 
-  Future<void> _launchEmail() async {
+  Future<void> _launchEmail(BuildContext context) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'teamsustainx@gmail.com',
@@ -322,100 +333,44 @@ class ContactUsSection extends StatelessWidget {
     if (await canLaunchUrl(emailUri)) {
       await launchUrl(emailUri);
     } else {
-      // Handle error (e.g., show a snackbar)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch email')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '📧 Contact Us',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: _launchEmail,
-          icon: const Icon(Icons.email),
-          label: const Text('Email Support'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: emeraldGreen,
-            foregroundColor: Colors.white,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: whiteColor.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: darkSlateGray.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class FeaturesSection extends StatelessWidget {
-  const FeaturesSection({super.key});
-
-  Widget _buildCard(String title, IconData icon, BuildContext context, VoidCallback? onTapAction) {
-    return Card(
-      child: InkWell(
-        onTap: onTapAction ?? () {},
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40, color: emeraldGreen),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Community Features',
+            'Get in Touch 📧',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 15),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            children: [
-              _buildCard('Buddy System', Icons.people_alt_outlined, context, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const BuddySystemPage()),
-                );
-              }),
-              _buildCard('Local Events', Icons.event_available_outlined, context, null),
-              _buildCard('Interest Groups', Icons.interests_outlined, context, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const InterestGroupsPage()),
-                );
-              }),
-              _buildCard('Create Group', Icons.add_circle_outline, context, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CreateGroupPage()),
-                );
-              }),
-            ],
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: () => _launchEmail(context),
+            icon: const Icon(Icons.email),
+            label: const Text('Email Support'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: emeraldGreen,
+              foregroundColor: whiteColor,
+              minimumSize: const Size(double.infinity, 50),
+            ),
           ),
         ],
       ),
@@ -434,17 +389,17 @@ class GroupChatPage extends StatefulWidget {
 }
 
 class _GroupChatPageState extends State<GroupChatPage> {
-  final List<String> messages = [
-    '👋 Welcome to group!',
-    '📢 Admin: Please be respectful to everyone.',
-    '📆 Upcoming event on Saturday, don’t miss it!'
+  final List<Map<String, String>> messages = [
+    {'text': '👋 Welcome to group!', 'sender': 'system'},
+    {'text': '📢 Admin: Please be respectful.', 'sender': 'admin'},
+    {'text': '📆 Event on Saturday!', 'sender': 'admin'},
   ];
   final TextEditingController _controller = TextEditingController();
 
   void _sendMessage() {
     if (_controller.text.trim().isEmpty) return;
     setState(() {
-      messages.add(_controller.text.trim());
+      messages.add({'text': _controller.text.trim(), 'sender': currentUserId});
       _controller.clear();
     });
   }
@@ -454,47 +409,70 @@ class _GroupChatPageState extends State<GroupChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.groupName),
-        backgroundColor: emeraldGreen,
-        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(16.0),
               itemCount: messages.length,
-              itemBuilder: (context, index) => Align(
-                alignment: index % 2 == 0 ? Alignment.centerLeft : Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: index % 2 == 0 ? mintGreen : emeraldGreen.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(12),
+              itemBuilder: (context, index) {
+                final message = messages[index];
+                final isMe = message['sender'] == currentUserId;
+                return Align(
+                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isMe ? emeraldGreen : lightGrey,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      message['text']!,
+                      style: TextStyle(color: isMe ? whiteColor : darkSlateGray),
+                    ),
                   ),
-                  child: Text(messages[index], style: const TextStyle(color: Colors.black)),
-                ),
-              ),
+                );
+              },
             ),
           ),
           if (widget.openChat)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: whiteColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: darkSlateGray.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Type a message...',
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  ElevatedButton(
+                  IconButton(
                     onPressed: _sendMessage,
-                    child: const Icon(Icons.send),
+                    icon: const Icon(Icons.send, color: emeraldGreen),
+                    style: IconButton.styleFrom(
+                      backgroundColor: lightGrey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -502,6 +480,12 @@ class _GroupChatPageState extends State<GroupChatPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
 
@@ -522,31 +506,48 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Group'),
-        backgroundColor: emeraldGreen,
-        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Create a New Group',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 16),
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Group Title'),
+              decoration: InputDecoration(
+                labelText: 'Group Title',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
-            DropdownButton<String>(
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
               value: groupType,
-              isExpanded: true,
-              onChanged: (value) => setState(() => groupType = value!),
+              decoration: InputDecoration(
+                labelText: 'Group Type',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               items: ['Entertainment', 'Education', 'Fashion', 'Other']
                   .map((type) => DropdownMenuItem(value: type, child: Text(type)))
                   .toList(),
+              onChanged: (value) => setState(() => groupType = value!),
             ),
+            const SizedBox(height: 16),
             SwitchListTile(
               title: const Text('Private Group'),
               value: isPrivate,
               onChanged: (val) => setState(() => isPrivate = val),
+              activeColor: emeraldGreen,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 if (_titleController.text.trim().isEmpty) {
@@ -566,6 +567,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 );
                 Navigator.pop(context);
               },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
               child: const Text('Create Group'),
             ),
           ],
@@ -596,33 +600,75 @@ class BuddySystemPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buddy System'),
-        backgroundColor: emeraldGreen,
-        foregroundColor: Colors.white,
       ),
       body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
         itemCount: buddies.length,
         itemBuilder: (context, index) {
           final buddy = buddies[index];
           return Card(
-            child: ListTile(
-              leading: const Icon(Icons.person, color: emeraldGreen),
-              title: Text(buddy['name']!),
-              subtitle: Text('${buddy['profession']}\n${buddy['location']}\nRate: ${buddy['rate']}'),
-              trailing: ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Connect with ${buddy['name']}'),
-                      content: const Text('To connect, please make payment of €10/hour.'),
-                      actions: [
-                        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-                        ElevatedButton(onPressed: () {}, child: const Text('Pay & Connect')),
+            margin: const EdgeInsets.only(bottom: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: emeraldGreen,
+                    child: Icon(Icons.person, color: whiteColor, size: 30),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          buddy['name']!,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          buddy['profession']!,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: mediumGrey),
+                        ),
+                        Text(
+                          buddy['location']!,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: mediumGrey),
+                        ),
+                        Text(
+                          'Rate: ${buddy['rate']}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: emeraldGreen),
+                        ),
                       ],
                     ),
-                  );
-                },
-                child: const Text('Request'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('Connect with ${buddy['name']}'),
+                          content: const Text('To connect, please make payment of €10/hour.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Payment initiated!')),
+                                );
+                              },
+                              child: const Text('Pay & Connect'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: const Text('Request'),
+                  ),
+                ],
               ),
             ),
           );
@@ -642,10 +688,20 @@ class InterestGroupsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Interest Groups'),
-        backgroundColor: emeraldGreen,
-        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CreateGroupPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
         itemCount: interestGroups.length,
         itemBuilder: (context, index) {
           final group = interestGroups[index];
@@ -656,25 +712,51 @@ class InterestGroupsPage extends StatelessWidget {
           final groupType = group['type'] as String;
 
           return Card(
-            child: ListTile(
-              leading: const Icon(Icons.group, color: emeraldGreen),
-              title: Row(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
                 children: [
-                  Text(groupName),
-                  if (isAdmin)
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Chip(
-                        label: Text('Admin', style: TextStyle(fontSize: 12, color: Colors.white)),
-                        backgroundColor: emeraldGreen,
-                        padding: EdgeInsets.zero,
-                      ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: emeraldGreen,
+                    child: Icon(Icons.group, color: whiteColor, size: 30),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              groupName,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            if (isAdmin)
+                              const Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Chip(
+                                  label: Text('Admin', style: TextStyle(fontSize: 12, color: whiteColor)),
+                                  backgroundColor: emeraldGreen,
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                          ],
+                        ),
+                        Text(
+                          'Type: $groupType',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: mediumGrey),
+                        ),
+                        Text(
+                          'Members: $membersCount${isPrivate ? ' • Private' : ''}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: mediumGrey),
+                        ),
+                      ],
                     ),
-                ],
-              ),
-              subtitle: Text('Type: $groupType\nMembers: $membersCount${isPrivate ? '\nPrivate' : ''}'),
-              trailing: isAdmin
-                  ? PopupMenuButton<String>(
+                  ),
+                  if (isAdmin)
+                    PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'delete') {
                           GroupManager.removeGroup(groupName);
@@ -709,7 +791,8 @@ class InterestGroupsPage extends StatelessWidget {
                         ),
                       ],
                     )
-                  : ElevatedButton(
+                  else
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -723,6 +806,8 @@ class InterestGroupsPage extends StatelessWidget {
                       },
                       child: const Text('Join'),
                     ),
+                ],
+              ),
             ),
           );
         },
