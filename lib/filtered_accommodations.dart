@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'theme.dart';
-import 'utils/csv_reader.dart';
 
 class FilteredAccommodationsPage extends StatefulWidget {
   final List<Map<String, dynamic>>? accommodations;
@@ -38,13 +38,11 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
 
   void _loadAccommodations() {
     _futureAccommodations = (widget.accommodations != null
-        ? Future.value(widget.accommodations)
-        : loadAccommodationsFromCsv())
+        ? Future.value(widget.accommodations ?? <Map<String, dynamic>>[])
+        : loadAccommodationsFromSupabase(page: _currentPage, itemsPerPage: _itemsPerPage))
         .then((data) {
-
-      return _applyFilters(data ?? []);
+      return _applyFilters(data);
     }).catchError((e) {
-
       return <Map<String, dynamic>>[];
     });
   }
@@ -55,7 +53,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
 
     if (query != null && query.isNotEmpty) {
       filteredData = filteredData.where((acc) {
-        return (acc['propertyType']?.toString().toLowerCase().contains(query) ?? false) ||
+        return (acc['propertytype']?.toString().toLowerCase().contains(query) ?? false) ||
             (acc['state']?.toString().toLowerCase().contains(query) ?? false) ||
             (acc['description']?.toString().toLowerCase().contains(query) ?? false);
       }).toList();
@@ -63,17 +61,17 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
 
     if (_bedroomsFilter != null) {
       filteredData = filteredData
-          .where((acc) => acc['numBedrooms']?.toString() == _bedroomsFilter)
+          .where((acc) => acc['numbedrooms']?.toString() == _bedroomsFilter)
           .toList();
     }
     if (_propertyTypeFilter != null) {
       filteredData = filteredData
-          .where((acc) => acc['propertyType']?.toString() == _propertyTypeFilter)
+          .where((acc) => acc['propertytype']?.toString() == _propertyTypeFilter)
           .toList();
     }
     if (_sizeFilter != null) {
       filteredData = filteredData
-          .where((acc) => acc['propertySize_m']?.toString() == _sizeFilter)
+          .where((acc) => acc['propertysize_m']?.toString() == _sizeFilter)
           .toList();
     }
     if (_stateFilter != null) {
@@ -458,7 +456,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                             children: [
                                               Flexible(
                                                 child: Text(
-                                                  '${acc['propertyType'] ?? 'Unknown'} - ${acc['price'] ?? 'N/A'}',
+                                                  '${acc['propertytype'] ?? 'Unknown'} - ${acc['price'] ?? 'N/A'}',
                                                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                                         color: darkSlateGray,
                                                         fontWeight: FontWeight.bold,
@@ -481,7 +479,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                               const Icon(Icons.king_bed, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
-                                                'Bedrooms: ${acc['numBedrooms'] ?? 'N/A'}',
+                                                'Bedrooms: ${acc['numbedrooms'] ?? 'N/A'}',
                                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                                       color: darkSlateGray,
                                                     ),
@@ -533,7 +531,7 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                               const Icon(Icons.square_foot, color: darkGreen, size: 24),
                                               const SizedBox(width: 10),
                                               Text(
-                                                'Size: ${acc['propertySize_m'] ?? 'N/A'} m²',
+                                                'Size: ${acc['propertysize_m'] ?? 'N/A'} m²',
                                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                                       color: darkSlateGray,
                                                     ),
@@ -597,14 +595,14 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
                                   ],
                                 ),
                               ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
@@ -673,5 +671,21 @@ class _FilteredAccommodationsPageState extends State<FilteredAccommodationsPage>
         },
       ),
     );
+  }
+}
+
+Future<List<Map<String, dynamic>>> loadAccommodationsFromSupabase({
+  int page = 0,
+  int itemsPerPage = 15,
+}) async {
+  try {
+    final data = await Supabase.instance.client
+        .from('accommodations')
+        .select()
+        .limit(10000); // Remove .range and use a high limit to fetch all rows
+    return (data as List<dynamic>).cast<Map<String, dynamic>>();
+  } catch (e) {
+    print('Error loading accommodations: $e');
+    return [];
   }
 }

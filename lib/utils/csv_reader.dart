@@ -1,28 +1,15 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:csv/csv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<List<Map<String, dynamic>>> loadAccommodationsFromCsv() async {
   try {
-    final csvString = await rootBundle.loadString('lib/assets/files/reduced_columns_data.csv');
-    const csvParser = CsvToListConverter(
-      eol: '\n',
-      fieldDelimiter: ',', // Ensure comma is the delimiter
-      shouldParseNumbers: false, // Keep numbers as strings for consistency
-    );
-    final rows = csvParser.convert(csvString);
-
-    if (rows.isEmpty) return [];
-
-    final headers = rows.first.map((e) => e.toString().trim()).toList();
-    return [
-      for (final row in rows.skip(1))
-        Map<String, dynamic>.fromIterables(
-          headers,
-          row.map((e) => e?.toString().trim() ?? ''),
-        )
-    ];
+    final data = await Supabase.instance.client
+        .from('accommodations')
+        .select();
+    return (data as List<dynamic>).cast<Map<String, dynamic>>();
   } catch (e) {
-    print('Error loading CSV: $e');
+    print('Error loading accommodations: $e');
     return [];
   }
 }
