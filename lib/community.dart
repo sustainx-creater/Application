@@ -107,7 +107,7 @@ class WelcomeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            r"Welcome father's to Our Community!",
+            r"Welcome to Our Community!",
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
