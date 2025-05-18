@@ -3,6 +3,8 @@
 ## Overview
 Git is a distributed version control system designed to track changes in source code during software development. It enables collaboration, branching, and version management with speed and efficiency. Whether you're a solo developer or part of a large team, Git keeps your project history organized and accessible.
 
+[Technical Documentation](https://word.cloud.microsoft/open/onedrive/?docId=9CB24D6CEBEEB7F3%21s8656d34f5a8d4a4d8cdeb6bd8f09b62d&driveId=9cb24d6cebeeb7f3)
+
 ## Why Git? 🤔
 - **Distributed**: Every developer has a full copy of the repository, enabling offline work.
 - **Fast**: Lightweight operations for branching, merging, and committing.
