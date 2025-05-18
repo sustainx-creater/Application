@@ -1,88 +1,87 @@
 
 
-# Git README 🚀
+# EZMove Git README 🚀
 
-Welcome to your project's version control setup with **Git**! This README covers the essentials to get you started with Git for tracking changes, collaborating, and keeping your codebase organized.
+**EZMove** is a Flutter app for relocating to Ireland, offering housing listings, community features, articles, and a chatbot. This README covers using **Git** to manage the codebase.
 [Technical Documentation](https://word.cloud.microsoft/open/onedrive/?docId=9CB24D6CEBEEB7F3%21s8656d34f5a8d4a4d8cdeb6bd8f09b62d&driveId=9cb24d6cebeeb7f3)
 
-## What is Git? 🤔
-Git is a fast, distributed version control system that lets you:
-- Track code changes with snapshots (commits).
-- Work on multiple features using branches.
-- Collaborate seamlessly with teams via remote repositories (e.g., GitHub, GitLab).
 
-## Getting Started 🛠️
+## Overview 🌍
+EZMove helps tourists, students, and professionals with:
+- **Housing**: Browse accommodations (Supabase, CSV).
+- **Community**: Group chats, buddy system, events, Q&A.
+- **Articles**: Markdown-rendered content.
+- **Chatbot**: AI for relocation queries.
+- **UI**: Responsive mobile/web with animations.
 
-### Installation
+**Tech**: Flutter (Dart), Supabase (PostgreSQL, Auth, Storage), animate_do, google_fonts, flutter_markdown, lottie.
+
+## Project Structure 📂
+```
+lib/
+├── main.dart          # App entry, Supabase setup
+├── home.dart          # Home with navigation
+├── signin.dart        # Auth screens
+├── housing.dart       # Housing UI
+├── community.dart     # Chats, events, Q&A
+├── articles.dart      # Article rendering
+├── chatbot.dart       # Chatbot UI
+├── theme.dart         # Styling
+├── csv_reader.dart    # CSV parsing
+assets/                # Images, CSV
+```
+
+## Git Setup 🛠️
 1. **Install Git**:
-   - Windows: Download from [git-scm.com](https://git-scm.com).
-   - macOS: `brew install git` (with Homebrew).
-   - Linux: `sudo apt install git` (Debian/Ubuntu) or `sudo yum install git` (CentOS).
-2. Verify: `git --version`.
-3. Configure:
+   - Windows: [git-scm.com](https://git-scm.com).
+   - macOS: `brew install git`.
+   - Linux: `sudo apt install git`.
+   - Verify: `git --version`.
+2. **Configure**:
    ```bash
    git config --global user.name "Your Name"
    git config --global user.email "your.email@example.com"
    ```
-
-### Project Setup
-1. **Initialize a Repository**:
+3. **Clone**:
    ```bash
-   git init
+   git clone https://github.com/sustainx-creater/Application.git
+   cd Application
    ```
-2. **Clone an Existing Repo**:
+4. **Dependencies**:
    ```bash
-   git clone <repository-url>
+   flutter pub get
    ```
+5. **Supabase**: Update `supabaseUrl`, `supabaseAnonKey` in `lib/main.dart`.
 
-## Key Commands 📋
-### Basic Workflow
-- Check status: `git status`
-- Stage files: `git add <file>` or `git add .`
-- Commit changes: `git commit -m "Add feature X"`
-- View history: `git log --oneline`
+## Key Git Commands 📋
+- **Track**: `git add .`, `git commit -m "Add feature"`
+- **Status**: `git status`
+- **Branch**: `git checkout -b feature/x`
+- **Merge**: `git checkout main`, `git merge feature/x`
+- **Remote**: `git push origin feature/x`, `git pull origin main`
+- **Undo**: `git restore <file>`, `git commit --amend`
 
-### Branching
-- Create branch: `git branch feature-x`
-- Switch branch: `git checkout feature-x`
-- Create & switch: `git checkout -b feature-x`
-- Merge: `git merge feature-x`
-
-### Remote Collaboration
-- Add remote: `git remote add origin <url>`
-- Push: `git push origin main`
-- Pull: `git pull origin main`
-
-### Undo Changes
-- Discard changes: `git restore <file>`
-- Unstage: `git restore --staged <file>`
-- Amend commit: `git commit --amend`
-
-## Project Workflow 🔄
-1. Create a branch for your feature: `git checkout -b feature/login`.
-2. Make changes, stage, and commit: `git add . && git commit -m "Add login UI"`.
-3. Push to remote: `git push origin feature/login`.
-4. Create a pull request (PR) on your platform (e.g., GitHub).
-5. Merge into `main` after review.
+## Workflow 🔄
+1. Branch: `git checkout -b feature/chatbot`.
+2. Edit, commit: `git add .`, `git commit -m "Add chatbot UI"`.
+3. Push: `git push origin feature/chatbot`.
+4. Create PR on GitHub.
+5. Merge to `main`.
 
 ## Best Practices ✅
-- Write clear commit messages (e.g., "Fix bug in auth flow").
-- Use branches for every feature or fix.
-- Pull regularly to avoid conflicts.
-- Add a `.gitignore` file for files like `node_modules/` or `.env`.
+- Clear commits: `"Fix housing filter bug"`.
+- Branch per feature.
+- Pull often: `git pull origin main`.
+- Use `.gitignore` for `build/`, `.env`.
 
-## Troubleshooting ⚙️
-- **Merge Conflict**: Edit conflicting files, resolve markers, then `git commit`.
-- **Push Rejected**: Run `git pull --rebase`, resolve conflicts, then push.
-- **Lost Commits**: Use `git reflog` to recover.
+## Troubleshooting 🐛
+- **Conflicts**: Resolve `<<<<<<<` markers, then `git commit`.
+- **Push Fails**: `git pull --rebase`, then push.
+- **Lost Commits**: `git reflog`.
 
-## Resources 📚
-- [Official Git Docs](https://git-scm.com/doc)
-- [Git Cheat Sheet](https://github.github.io/training-kit/downloads/github-git-cheat-sheet.pdf)
-- Search `#git` on X for community tips.
+## Contact 📬
+- Email: [teamsustainx@gmail.com](mailto:teamsustainx@gmail.com)
+- Website: [https://sustainax.netlify.app/](https://sustainax.netlify.app/)
+- GitHub: [sustainx-creater/Application](https://github.com/sustainx-creater/Application)
 
-## Need Help? 📬
-- Email: [git@git-scm.com](mailto:git@git-scm.com)
-- Website: [git-scm.com](https://git-scm.com)
-
-Happy coding and version controlling! 🎉
+Code, commit, relocate! 🎉
