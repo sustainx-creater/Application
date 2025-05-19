@@ -5,15 +5,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:lottie/lottie.dart';
-import 'aboutus.dart';
-import 'chatbot.dart';
-import 'community.dart';
-import 'housing.dart';
-import 'articles.dart';
-import 'theme.dart';
-import '_trending_articles_slideshow.dart';
-import 'filtered_accommodations.dart';
-import 'utils/csv_reader.dart';
+import '../about/aboutus.dart';
+import '../chatbot/chatbot.dart';
+import '../community/community.dart';
+import '../housing/housing.dart';
+import '../articles/articles.dart';
+import '../../theme.dart';
+import '../articles/_trending_articles_slideshow.dart';
+import '../housing/filtered_accommodations.dart';
+import '../housing/utils/csv_reader.dart';
+import '../profile/profile.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -63,13 +64,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: ElasticIn(
-          child: Text(
-            _pageTitles[_selectedIndex],
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w700,
-              fontSize: 26,
-              color: darkSlateGray,
-              letterSpacing: -0.5,
+          child: Flexible(
+            child: Text(
+              _pageTitles[_selectedIndex],
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w700,
+                fontSize: 26,
+                color: darkSlateGray,
+                letterSpacing: -0.5,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ),
@@ -81,19 +86,25 @@ class _MyHomePageState extends State<MyHomePage> {
               radius: 20,
               backgroundColor: emeraldGreen.withOpacity(0.1),
               child: supabase.auth.currentUser == null
-                  ? const Icon(Icons.person, color: darkSlateGray)
+                  ? const Icon(Icons.person, color: darkSlateGray, size: 24)
                   : ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: 'https://cdn-icons-png.flaticon.com/512/64/64572.png',
                         width: 40,
                         height: 40,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const Icon(Icons.person, color: darkSlateGray),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                        placeholder: (context, url) => const Icon(Icons.person, color: darkSlateGray, size: 24),
+                        errorWidget: (context, url, error) => const Icon(Icons.error, size: 24),
                       ),
                     ),
             ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
+            onPressed: () {
+              if (supabase.auth.currentUser == null) {
+                Navigator.pushNamed(context, '/signin');
+              } else {
+                Scaffold.of(context).openDrawer(); // Open drawer instead of navigating directly
+              }
+            },
           ),
         ),
         actions: [
@@ -126,8 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }
             },
-            fillColor: Colors.transparent, // Changed to fully transparent
-            elevation: 0, // Optional: Removed elevation for a flatter look
+            fillColor: Colors.transparent,
+            elevation: 0,
             shape: const CircleBorder(),
             constraints: const BoxConstraints.tightFor(width: 80, height: 80),
             highlightColor: Colors.transparent,
@@ -384,6 +395,17 @@ class ProfileDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           ListTile(
+            leading: const Icon(Icons.account_circle, color: darkSlateGray, size: 26),
+            title: Text('Account', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16)),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              ); // Navigate to ProfilePage
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout, color: darkSlateGray, size: 26),
             title: Text('Sign Out', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16)),
             onTap: () {
@@ -440,130 +462,142 @@ class _HomePageContentState extends State<HomePageContent> {
               final screenWidth = MediaQuery.of(context).size.width;
               final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
               final isLargeScreen = screenWidth > 600;
-              final heroHeight = isLandscape
-                  ? screenHeight * 0.65
-                  : screenHeight * 0.5;
+              final heroHeight = isLandscape ? screenHeight * 0.65 : screenHeight * 0.5;
               final clampedHeight = heroHeight.clamp(280.0, 450.0);
 
-              return Stack(
-                children: [
-                  Container(
-                    height: clampedHeight,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [emeraldGreen.withOpacity(0.7), warmGold.withOpacity(0.5)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+              return ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: screenWidth),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: clampedHeight,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [emeraldGreen.withOpacity(0.7), warmGold.withOpacity(0.5)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                       ),
-                    ),
-                    child: Opacity(
-                      opacity: 0.3,
-                      child: Lottie.asset(
-                        'lib/assets/animations/hero_background.json',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: FadeInDown(
-                      duration: const Duration(milliseconds: 1000),
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: isLargeScreen ? 800 : screenWidth * 0.9,
-                            maxHeight: clampedHeight * 0.9,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: SizedBox(
+                          width: screenWidth,
+                          height: clampedHeight,
+                          child: Lottie.asset(
+                            'lib/assets/animations/hero_background.json',
+                            fit: BoxFit.cover,
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: isLargeScreen ? 40.0 : 20.0,
-                              vertical: isLandscape ? 20.0 : 30.0,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: FadeInDown(
+                        duration: const Duration(milliseconds: 1000),
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: isLargeScreen ? 800 : screenWidth * 0.9,
+                              maxHeight: clampedHeight * 0.9,
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'New Place, New Possibilities',
-                                    style: GoogleFonts.inter(
-                                      fontSize: isLargeScreen
-                                          ? (isLandscape ? 36 : 48)
-                                          : (isLandscape ? 32 : 40),
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                      letterSpacing: -1,
-                                      shadows: [
-                                        Shadow(
-                                          color: darkSlateGray.withOpacity(0.3),
-                                          blurRadius: 12,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Flexible(
-                                  child: Text(
-                                    'Housing, Local Insights & Human-Like Chat Support for Students, Expats & Tourists',
-                                    style: GoogleFonts.inter(
-                                      fontSize: isLargeScreen
-                                          ? (isLandscape ? 16 : 18)
-                                          : (isLandscape ? 14 : 16),
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white.withOpacity(0.9),
-                                      height: 1.5,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                if (user == null)
-                                  BounceInUp(
-                                    child: ElevatedButton(
-                                      onPressed: () => Navigator.pushNamed(context, '/signup'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: emeraldGreen,
-                                        foregroundColor: whiteColor,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: isLargeScreen ? 40 : 24,
-                                          vertical: isLandscape ? 12 : 16,
-                                        ),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                        elevation: 4,
-                                      ),
-                                      child: Text(
-                                        'Start Your Journey',
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: isLandscape ? 14 : 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                if (user != null)
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isLargeScreen ? 40.0 : 20.0,
+                                vertical: isLandscape ? 20.0 : 30.0,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                                   Flexible(
                                     child: Text(
-                                      'Welcome back, ${user.userMetadata?['name'] ?? 'Explorer'}!',
+                                      'New Place, New Possibilities',
                                       style: GoogleFonts.inter(
                                         fontSize: isLargeScreen
-                                            ? (isLandscape ? 18 : 20)
-                                            : (isLandscape ? 16 : 18),
-                                        fontWeight: FontWeight.w500,
+                                            ? (isLandscape ? 36 : 48)
+                                            : (isLandscape ? 32 : 40),
+                                        fontWeight: FontWeight.w900,
                                         color: Colors.white,
+                                        letterSpacing: -1,
+                                        shadows: [
+                                          Shadow(
+                                            color: darkSlateGray.withOpacity(0.3),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
                                       ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                     ),
                                   ),
-                              ],
+                                  const SizedBox(height: 8),
+                                  Flexible(
+                                    child: Text(
+                                      'Housing, Local Insights & Human-Like Chat Support for Students, Expats & Tourists',
+                                      style: GoogleFonts.inter(
+                                        fontSize: isLargeScreen
+                                            ? (isLandscape ? 16 : 18)
+                                            : (isLandscape ? 14 : 16),
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white.withOpacity(0.9),
+                                        height: 1.5,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  if (user == null)
+                                    BounceInUp(
+                                      child: ElevatedButton(
+                                        onPressed: () => Navigator.pushNamed(context, '/signup'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: emeraldGreen,
+                                          foregroundColor: whiteColor,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: isLargeScreen ? 40 : 24,
+                                            vertical: isLandscape ? 12 : 16,
+                                          ),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          elevation: 4,
+                                        ),
+                                        child: Text(
+                                          'Start Your Journey',
+                                          style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: isLandscape ? 14 : 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (user != null)
+                                    Flexible(
+                                      child: Text(
+                                        'Welcome back, ${user.userMetadata?['name'] ?? 'Explorer'}!',
+                                        style: GoogleFonts.inter(
+                                          fontSize: isLargeScreen
+                                              ? (isLandscape ? 18 : 20)
+                                              : (isLandscape ? 16 : 18),
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           ),
@@ -626,6 +660,7 @@ class _HomePageContentState extends State<HomePageContent> {
                   height: 220,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     children: [
                       _buildFeatureCard(
                         context,
@@ -662,7 +697,6 @@ class _HomePageContentState extends State<HomePageContent> {
                         emeraldGreen,
                         routeToIndexMap,
                       ),
-                      
                     ],
                   ),
                 ),
@@ -806,6 +840,8 @@ class _HomePageContentState extends State<HomePageContent> {
                 color: darkSlateGray,
               ),
               textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ],
         ),

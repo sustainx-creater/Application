@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'articles.dart';
-import 'theme.dart';
+import '../../theme.dart';
 
 class TrendingArticlesSlideshow extends StatefulWidget {
   final Function(int)? onNavigateToIndex;

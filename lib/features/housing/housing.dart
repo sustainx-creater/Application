@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'filtered_accommodations.dart';
-import 'theme.dart';
+import '../../theme.dart';
 
 class HousingPageContent extends StatefulWidget {
   const HousingPageContent({super.key});

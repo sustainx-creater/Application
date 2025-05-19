@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'theme.dart';
+import '../../theme.dart';
 import 'utils/csv_reader.dart';
 
 class FilteredAccommodationsPage extends StatefulWidget {
