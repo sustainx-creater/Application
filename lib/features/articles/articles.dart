@@ -4,7 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'theme.dart';
+import '../../theme.dart';
 
 class ArticlesPageContent extends StatefulWidget {
   final int? initialArticleIndex;

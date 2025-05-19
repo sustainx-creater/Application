@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'chatbot_service.dart'; // Adjust path if needed
-import 'theme.dart';
+import '../../theme.dart';
 
 class ChatbotPageContent extends StatefulWidget {
   const ChatbotPageContent({super.key});

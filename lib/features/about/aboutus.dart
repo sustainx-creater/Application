@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'theme.dart';
+import '../../theme.dart';
 
 class AboutUsPageContent extends StatelessWidget {
   const AboutUsPageContent({super.key});
@@ -155,13 +155,6 @@ class AboutUsPageContent extends StatelessWidget {
         'bio': 'Driven by mobile innovation.',
         'image': 'lib/assets/images/shivansh.jpg',
         'linkedin': 'https://linkedin.com/in/shivanshbhatnagar',
-      },
-      {
-        'name': 'Vrinda Sharma',
-        'role': 'Developer',
-        'bio': 'Expert in engaging UI designs.',
-        'image': 'lib/assets/images/vrinda.jpg',
-        'linkedin': 'https://linkedin.com/in/vrindasharma',
       },
     ];
 
