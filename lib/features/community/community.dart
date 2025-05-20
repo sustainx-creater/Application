@@ -60,19 +60,18 @@ class CommunityPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+    return const SingleChildScrollView(
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 80),
-          const WelcomeSection(),
-          const SizedBox(height: 24),
-          const FeaturesSection(),
-          const SizedBox(height: 24),
-          const InterestGroupsSection(),
-          const SizedBox(height: 24),
-          const ContactUsSection(),
+          WelcomeSection(),
+          SizedBox(height: 24),
+          FeaturesSection(),
+          SizedBox(height: 24),
+          InterestGroupsSection(),
+          SizedBox(height: 24),
+          ContactUsSection(),
         ],
       ),
     );
@@ -167,7 +166,7 @@ class FeaturesSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          childAspectRatio: 1.2,
+          childAspectRatio: 1.0, // Reduce aspect ratio for better fit
           children: [
             _buildFeatureCard('Buddy System', Icons.people_alt_outlined, context, () {
               Navigator.push(
@@ -195,6 +194,7 @@ class FeaturesSection extends StatelessWidget {
             }),
           ],
         ),
+        const SizedBox(height: 16), // Add space after grid
       ],
     );
   }

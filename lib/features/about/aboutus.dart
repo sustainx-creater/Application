@@ -186,7 +186,7 @@ class AboutUsPageContent extends StatelessWidget {
       {'year': 'Sep 2024', 'event': 'Conceived EZMove, won Citi Upstart spot'},
       {'year': 'Nov 2024', 'event': 'Conducted 100+ user interviews'},
       {'year': 'Jun/Jul 2025', 'event': 'Planned app release in Ireland'},
-      {'year': '2026', 'event': 'Expand to USA, EU, Australia'},
+      {'year': '2026', 'event': 'Expand to EU, USA, Australia'},
     ];
 
     return Scaffold(
@@ -599,7 +599,7 @@ class AboutUsPageContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ConstrainedBox(
-                    constraints: const BoxConstraints(), // Remove maxHeight constraint
+                    constraints: const BoxConstraints(),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -608,7 +608,7 @@ class AboutUsPageContent extends StatelessWidget {
                         crossAxisCount: screenWidth > 600 ? 3 : 2,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
-                        childAspectRatio: 0.85,
+                        childAspectRatio: screenWidth > 600 ? 0.85 : 0.65, // Reduce aspect ratio for more vertical space
                       ),
                       itemCount: teamMembers.length,
                       itemBuilder: (context, index) {
@@ -716,6 +716,7 @@ class AboutUsPageContent extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 32), // Add more space after grid
                 ],
               ),
             ),

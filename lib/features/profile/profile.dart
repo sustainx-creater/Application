@@ -143,6 +143,15 @@ class _ProfilePageState extends State<ProfilePage> {
             floating: false,
             pinned: true,
             backgroundColor: emeraldGreen,
+            title: Text(
+              'My Profile',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+                color: whiteColor,
+                letterSpacing: -0.5,
+              ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
@@ -154,28 +163,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 60,
-                    left: 16,
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back, color: whiteColor, size: 28),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'My Profile',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 28,
-                            color: whiteColor,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                   Positioned(

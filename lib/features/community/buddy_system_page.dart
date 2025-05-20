@@ -58,7 +58,7 @@ class BuddySystemPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -83,6 +83,12 @@ class BuddySystemPage extends StatelessWidget {
                         ),
                       );
                     },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      textStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
                     child: const Text('Request'),
                   ),
                 ],

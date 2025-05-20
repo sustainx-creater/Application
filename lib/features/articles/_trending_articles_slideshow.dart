@@ -71,7 +71,7 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
 
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
@@ -115,9 +115,10 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: _currentPage == i ? 0 : 16),
+                  margin: EdgeInsets.symmetric(horizontal: 2, vertical: _currentPage == i ? 0 : 16),
+                  constraints: const BoxConstraints(maxWidth: 300),
                   decoration: BoxDecoration(
-                    color: whiteColor, // or theme.scaffoldBackgroundColor
+                    color: whiteColor,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -132,73 +133,77 @@ class _TrendingArticlesSlideshowState extends State<TrendingArticlesSlideshow> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          (article['headline'] ?? article['title'] ?? 'Untitled').toString(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: darkSlateGray,
+                    padding: const EdgeInsets.all(12.0),
+                    child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            (article['headline'] ?? article['title'] ?? 'Untitled').toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: darkSlateGray,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          (article['summary'] ?? article['content'] ?? '')
-                                  .toString()
-                                  .replaceAll(RegExp(r'[#*\-\n]'), '')
-                                  .substring(
-                                    0,
-                                    (article['summary'] ?? article['content'] ?? '')
-                                                .toString()
-                                                .length >
-                                            80
-                                        ? 80
-                                        : (article['summary'] ?? article['content'] ?? '')
-                                            .toString()
-                                            .length,
-                                  ) +
-                              ((article['summary'] ?? article['content'] ?? '')
-                                          .toString()
-                                          .length >
-                                      80
-                                  ? '...'
-                                  : ''),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: mediumGrey.withOpacity(0.9),
+                          const SizedBox(height: 8),
+                          Text(
+                            (article['summary'] ?? article['content'] ?? '')
+                                    .toString()
+                                    .replaceAll(RegExp(r'[#*\-\n]'), '')
+                                    .substring(
+                                      0,
+                                      (article['summary'] ?? article['content'] ?? '')
+                                                  .toString()
+                                                  .length >
+                                              80
+                                          ? 80
+                                          : (article['summary'] ?? article['content'] ?? '')
+                                              .toString()
+                                              .length,
+                                    ) +
+                                ((article['summary'] ?? article['content'] ?? '')
+                                        .toString()
+                                        .length >
+                                    80
+                                    ? '...'
+                                    : ''),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: mediumGrey.withOpacity(0.9),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'By ${article['author'] ?? 'Unknown'}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                            color: darkSlateGray,
+                          const SizedBox(height: 10),
+                          Text(
+                            'By ${article['author'] ?? 'Unknown'}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              color: darkSlateGray,
+                            ),
                           ),
-                        ),
-                        Text(
-                          (article['date'] ?? '').toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: mediumGrey,
+                          Text(
+                            (article['date'] ?? '').toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: mediumGrey,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

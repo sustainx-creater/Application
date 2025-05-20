@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../theme.dart';
-import 'utils/csv_reader.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class FilteredAccommodationsPage extends StatefulWidget {
   final List<Map<String, dynamic>>? accommodations;

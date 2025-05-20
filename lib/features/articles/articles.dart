@@ -322,7 +322,7 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
                   ),
                 )
               : ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12), // Reduce horizontal padding
                   itemCount: sortedArticles.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
@@ -342,7 +342,7 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
                         ),
                         color: whiteColor,
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(12), // Reduce padding
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -351,7 +351,7 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
                                 backgroundImage: AssetImage((article['image'] ?? 'lib/assets/images/aditya.jpg').toString()),
                                 backgroundColor: lightGrey,
                               ),
-                              const SizedBox(width: 16),
+                              const SizedBox(width: 12), // Reduce spacing
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,25 +368,31 @@ class _ArticlesPageContentState extends State<ArticlesPageContent> {
                                     const SizedBox(height: 8),
                                     Row(
                                       children: [
-                                        Text(
-                                          (article['author'] ?? 'Unknown').toString(),
-                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                fontFamily: GoogleFonts.inter().fontFamily,
-                                                color: mediumGrey,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                              ),
+                                        Flexible(
+                                          child: Text(
+                                            (article['author'] ?? 'Unknown').toString(),
+                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  fontFamily: GoogleFonts.inter().fontFamily,
+                                                  color: mediumGrey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: 8),
                                         const Icon(Icons.access_time, size: 16, color: mediumGrey),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          (article['date'] ?? '').toString(),
-                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                fontFamily: GoogleFonts.inter().fontFamily,
-                                                color: mediumGrey,
-                                                fontSize: 14,
-                                              ),
+                                        const SizedBox(width: 2),
+                                        Flexible(
+                                          child: Text(
+                                            (article['date'] ?? '').toString(),
+                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  fontFamily: GoogleFonts.inter().fontFamily,
+                                                  color: mediumGrey,
+                                                  fontSize: 14,
+                                                ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -556,9 +562,14 @@ class ArticleDetailPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   onPressed: () {
                     Navigator.pop(context);
-                    (context.findAncestorStateOfType<_ArticlesPageContentState>())?.setState(() {
-                      (context.findAncestorStateOfType<_ArticlesPageContentState>())?._searchQuery = '#$tag';
-                    });
+                    // Show a message to instruct user to use the search bar for tag filtering
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Use the search bar to filter by #$tag'),
+                        backgroundColor: warmGold,
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
                   },
                 )).toList(),
               ),

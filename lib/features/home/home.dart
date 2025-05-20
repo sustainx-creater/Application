@@ -514,8 +514,8 @@ class _HomePageContentState extends State<HomePageContent> {
                                       'New Place, New Possibilities',
                                       style: GoogleFonts.inter(
                                         fontSize: isLargeScreen
-                                            ? (isLandscape ? 36 : 48)
-                                            : (isLandscape ? 32 : 40),
+                                            ? (isLandscape ? 30 : 38) // Reduced size
+                                            : (isLandscape ? 26 : 32),
                                         fontWeight: FontWeight.w900,
                                         color: Colors.white,
                                         letterSpacing: -1,
@@ -532,14 +532,14 @@ class _HomePageContentState extends State<HomePageContent> {
                                       maxLines: 2,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 16), // Add more space after main title
                                   Flexible(
                                     child: Text(
                                       'Housing, Local Insights & Human-Like Chat Support for Students, Expats & Tourists',
                                       style: GoogleFonts.inter(
                                         fontSize: isLargeScreen
-                                            ? (isLandscape ? 16 : 18)
-                                            : (isLandscape ? 14 : 16),
+                                            ? (isLandscape ? 14 : 16)
+                                            : (isLandscape ? 12 : 14), // Slightly reduced
                                         fontWeight: FontWeight.w400,
                                         color: Colors.white.withOpacity(0.9),
                                         height: 1.5,
@@ -1026,11 +1026,11 @@ class _FeaturedHousingSlideshowState extends State<_FeaturedHousingSlideshow> wi
                         ],
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  ), // <-- Properly close ClipRRect
+                ), // <-- Properly close AnimatedScale
+              ); // <-- Properly close GestureDetector
+            }, // <-- Properly close itemBuilder
+          ), // <-- Properly close PageView.builder
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
