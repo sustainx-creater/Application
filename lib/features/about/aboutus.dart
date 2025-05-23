@@ -186,7 +186,7 @@ class AboutUsPageContent extends StatelessWidget {
       {'year': 'Sep 2024', 'event': 'Conceived EZMove, won Citi Upstart spot'},
       {'year': 'Nov 2024', 'event': 'Conducted 100+ user interviews'},
       {'year': 'Jun/Jul 2025', 'event': 'Planned app release in Ireland'},
-      {'year': '2026', 'event': 'Expand to EU, USA, Australia'},
+      {'year': '2026', 'event': 'Expand UK'},
     ];
 
     return Scaffold(
