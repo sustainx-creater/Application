@@ -102,12 +102,12 @@ class _MyHomePageState extends State<MyHomePage> {
               if (supabase.auth.currentUser == null) {
                 Navigator.pushNamed(context, '/signin');
               } else {
-                Scaffold.of(context).openDrawer(); // Open drawer instead of navigating directly
+                Scaffold.of(context).openDrawer();
               }
             },
           ),
         ),
-        actions: [
+        actions: _selectedIndex == 0 ? null : [
           _buildStylishMenu(_selectedIndex, context),
         ],
       ),
@@ -229,6 +229,12 @@ class _MyHomePageState extends State<MyHomePage> {
           {'title': 'Show Listings', 'icon': Icons.list_alt},
           {'title': 'Add Listing', 'icon': Icons.add_home_work},
         ],
+      2 => [
+          {'title': 'Find Buddies', 'icon': Icons.people_alt},
+          {'title': 'Create Group', 'icon': Icons.group_add},
+          {'title': 'Events', 'icon': Icons.event},
+          {'title': 'Community Guidelines', 'icon': Icons.rule},
+        ],
       3 => [
           {'title': 'Write Article', 'icon': Icons.edit_note},
           {'title': 'Your Articles', 'icon': Icons.article},
@@ -290,15 +296,24 @@ class _MyHomePageState extends State<MyHomePage> {
       menuChildren: menuItems.map((item) {
         return MenuItemButton(
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${item['title']} Clicked'),
-                backgroundColor: emeraldGreen,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              ),
-            );
+            if (item['title'] == 'Show Listings') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => FilteredAccommodationsPage(),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${item['title']} Clicked'),
+                  backgroundColor: emeraldGreen,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                ),
+              );
+            }
           },
           child: Row(
             children: [
@@ -406,6 +421,22 @@ class ProfileDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.assignment_turned_in, color: darkSlateGray, size: 26),
+            title: Text('Visa Tracker', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16)),
+            onTap: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Visa Tracker coming soon!'),
+                  backgroundColor: emeraldGreen,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                ),
+              );
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout, color: darkSlateGray, size: 26),
             title: Text('Sign Out', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16)),
             onTap: () {
@@ -417,7 +448,7 @@ class ProfileDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
-              'EZMove v2.0.0',
+              'EZMove v0.0.5',
               style: GoogleFonts.inter(
                 color: darkSlateGray.withOpacity(0.5),
                 fontWeight: FontWeight.w500,
